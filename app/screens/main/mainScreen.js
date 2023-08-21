@@ -21,6 +21,7 @@ class MainScreen {
       autoHideMenuBar: true,
       webPreferences: {
         contextIsolation: true,
+        devTools:false,
         preload: path.join(__dirname, "./mainPreload.js"),
       },
     });
