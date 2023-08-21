@@ -8,19 +8,13 @@ let curWindow;
 //Basic flags
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
-autoUpdater.setFeedURL({
-  provider: 'github',
-  owner: 'nvnguyen359',
-  private: true,
-  token: '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'
-})
+
 function createWindow() {
   curWindow = new MainScreen();
 }
 
 app.whenReady().then(() => {
   createWindow();
-
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length == 0) createWindow();
   });
