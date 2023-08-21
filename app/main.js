@@ -6,7 +6,7 @@ const { autoUpdater, AppUpdater } = require("electron-updater");
 let curWindow;
 
 //Basic flags
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.setFeedURL({
   provider: 'github',
