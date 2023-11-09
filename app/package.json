@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon --exec electron .",
     "start": "electron .",
-    "dist": "electron-builder"
+    "deploy": "electron-builder",
+    "build": "electron-builder"
   },
   "repository": "https://github.com/nvnguyen359/Orders",
   "publish": {
@@ -15,7 +16,7 @@
     "releaseType": "release"
   },
   "build": {
-    "appId": "com.coderjeet.autoupdater",
+    "appId": "com.nguyen.autoupdater",
     "productName": "Orders",
     "win": {
       "target": "nsis"
