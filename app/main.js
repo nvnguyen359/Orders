@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain, ipcRenderer } = require("electron");
 const MainScreen = require("./screens/main/mainScreen");
 const Globals = require("./globals");
 const { autoUpdater, AppUpdater } = require("electron-updater");
-
+const path = require("path");
+const pathServer = path.join(__dirname, "server.js");
 let curWindow;
 
 //Basic flags
@@ -12,7 +13,7 @@ autoUpdater.autoInstallOnAppQuit = true;
 function createWindow() {
   curWindow = new MainScreen();
 }
-
+app.serve = require(pathServer);
 app.whenReady().then(() => {
   createWindow();
   app.on("activate", function () {
