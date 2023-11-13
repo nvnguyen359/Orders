@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "./../.env" });
-require('./apis/apiGoogle')
+//require('./apis/apiGoogle')
 var bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");

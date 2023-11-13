@@ -7,6 +7,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from "@angular/material/core";
 })
 export class AppComponent {
   title = "client";
+  showFiller = false;
   constructor(
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string
