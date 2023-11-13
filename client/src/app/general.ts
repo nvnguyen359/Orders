@@ -8,7 +8,7 @@ export enum BaseApiUrl {
   NhapHangs = "nhaphang",
   ChiTietDonHangs = "chitietdonhang",
   SanpPhams = "sanpham",
-  DonHangs = "donhang",
+  DonHangs = "orders",
   ChiPhis = "chiphi",
   KhachHangs = "khachhang",
   All = "all",

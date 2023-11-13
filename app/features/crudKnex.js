@@ -30,19 +30,19 @@ class CRUDKNEX {
     return result;
   }
   async update(data) {
-    const Id = data?.Id;
+    const id = data?.Id;
     data.updatedAt = new Date().addHours(12).toISOString();
-    const result = await knex(this.table).where({ Id }).update(data);
+    const result = await knex(this.table).where({ id }).update(data);
 
     return result;
   }
   async upsert(data) {
-    return !data.Id ? await this.create(data) : await this.update(data);
+    return !data.id ? await this.create(data) : await this.update(data);
   }
   async destroy(id) {
-    return await knex(this.table).where({ Id: id }).delete();
+    return await knex(this.table).where({ id }).delete();
   }
-  async findAll(limit = 100, offset = 0,query = "") {
+  async findAll(query = "",limit = 100, offset = 0) {
     const result =
       query == ""
         ? await knex(this.table).select("*").limit(limit).offset(offset)
@@ -51,7 +51,10 @@ class CRUDKNEX {
     return result;
   }
   async findId(id) {
-    return await knex(this.table).where({ Id: id }).first();
+    return await knex(this.table).where({ id}).first();
+  }
+  async filterWithObj(obj) {
+    return await knex(this.table).where(obj);
   }
   async findOne(obj) {
     return await knex(this.table).where(obj).first();
