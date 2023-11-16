@@ -1,8 +1,6 @@
 const { CRUDKNEX } = require("../features/crudKnex");
 const lib = require("../shares/lib");
-require("colors");
 const apisSqlite = async (app) => {
-
   const array = await getAllTables();
   array.forEach((element) => {
     let crud = new CRUDKNEX(element.trim());
@@ -12,21 +10,19 @@ const apisSqlite = async (app) => {
     upsert(element, app, crud);
     destroy(element, app, crud);
   });
-  getAllOrders(app)
+  getAllOrders(app);
   // let crud = new CRUDKNEX("Đơn Hàng");
   // getAll("donhang", app, crud);
 };
-const getAllOrders = ( app) => {
+const getAllOrders = (app) => {
   app.get(`/api/orders`, async (req, res, next) => {
     const q = req.query;
-    const limit = q.limit | 100;
-    const offset = q.offset | 0;
+    const limit = q.limit || 100;
+    const offset = q.offset || 0;
     let crud = new CRUDKNEX("order");
     let listOrders = await crud.findAll(q.query, limit, offset);
-   let crudDetails = new CRUDKNEX("orderDetails");
-    listOrders  = Array.from(listOrders).map((x)=>{
-
-    })
+    let crudDetails = new CRUDKNEX("orderDetails");
+    listOrders = Array.from(listOrders).map((x) => {});
     res.send(listOrders);
     next();
   });
@@ -41,11 +37,11 @@ const upsert = (element, app, crud) => {
 const findAll = (element, app, crud) => {
   app.get(`/api/${element}`, async (req, res, next) => {
     const q = req.query;
-   // console.log(q)
-    const limit = parseInt(q.pageSize) ||parseInt(q.limit);
+    const column = q.columns ? q.columns.split(",") : [];
+    const limit = parseInt(q.pageSize) || parseInt(q.limit) || 100;
     const offset = parseInt(q.page) || 0;
-   // console.log(limit, offset)
-    res.send(await crud.findAll( q.query,limit, offset*limit));
+    // console.log(limit, offset)
+    res.send(await crud.findAll(q.query, column, limit, offset * limit));
     next();
   });
 };
@@ -76,4 +72,4 @@ const getAllTables = async () => {
   return tables;
 };
 
-module.exports = { apisSqlite,getAllTables };
+module.exports = { apisSqlite, getAllTables };

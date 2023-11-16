@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Inject } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({
   selector: "app-order-upsert",
@@ -8,4 +9,7 @@ import { Component } from "@angular/core";
 export class OrderUpsertComponent {
   first = "Tạo Đơn Hàng Mới Nhanh";
   second = "Tạo Đơn Hàng Mới";
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any){
+    console.log(data)
+  }
 }

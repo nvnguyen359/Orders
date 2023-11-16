@@ -42,19 +42,30 @@ class CRUDKNEX {
   async destroy(id) {
     return await knex(this.table).where({ id }).delete();
   }
-  async findAll(query = "", limit, offset = 0) {
-   
-   return new Promise(async(res,rej)=>{
-    const result =
-    query == ""
-      ? await knex(this.table).select("*").limit(limit).offset(offset)
-      : await knex.raw(query);
-      knex(this.table).count("id as CNT").then((total)=>{
-       // console.log(total[0].CNT);
-        res ({ items: result, count: total[0].CNT });
-      })
-   })
-    
+  async findAll(query = "", column = null, limit, offset = 0) {
+    return new Promise(async (res, rej) => {
+      const result =
+        query == ""
+          ? column
+            ? await knex
+                .columns(column)
+                .select()
+                .limit(limit)
+                .offset(offset)
+                .from(this.table)
+            : await knex
+                .select("*")
+                .limit(limit)
+                .offset(offset)
+                .from(this.table)
+          :!offset? await knex.raw(query + ` limit ${limit} offset ${offset}`):await knex.raw(query);
+      knex(this.table)
+        .count("id as CNT")
+        .then((total) => {
+          // console.log(total[0].CNT);
+          res({ items: result, count: total[0].CNT });
+        });
+    });
   }
   async findId(id) {
     return await knex(this.table).where({ id }).first();
