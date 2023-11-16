@@ -28,10 +28,9 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { OrderGridComponent } from './Components/order-grid/order-grid.component';
-import { OrderListViewComponent } from './Components/order-list-view/order-list-view.component';
+
 @NgModule({
-  declarations: [AppComponent, SpinnerComponent, MenuLeftComponent, OrderGridComponent, OrderListViewComponent],
+  declarations: [AppComponent, SpinnerComponent, MenuLeftComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

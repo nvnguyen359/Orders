@@ -1,8 +1,10 @@
+const {delay} = require('./../shares/lib')
 const createTableOrders = async (knex) => {
   try {
     const tbl = "order";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -22,6 +24,7 @@ const createTableOrders = async (knex) => {
       exoend(table);
       
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -33,6 +36,7 @@ const createTableDetailsOrders = async (knex) => {
     const tbl = "orderDetails";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -49,8 +53,8 @@ const createTableDetailsOrders = async (knex) => {
       table.integer("importPrice");
       table.string("orderId");
       exoend(table);
-     
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -61,6 +65,7 @@ const createTableCustomer = async (knex) => {
     const tbl = "customer";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -74,6 +79,7 @@ const createTableCustomer = async (knex) => {
       table.string("email");
       exoend(table);
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -84,6 +90,7 @@ const createTableProduct = async (knex) => {
     const tbl = "product";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -98,6 +105,7 @@ const createTableProduct = async (knex) => {
       exoend(table);
 
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -106,13 +114,14 @@ const createTableProduct = async (knex) => {
 
 const exoend = (table) => {
   table.datetime("createdAt").notNullable();
-  table.datetime("updatedAt").notNullable();
+  table.datetime("updatedAt");
 };
 const createInputProduct = async (knex) => {
   try {
     const tbl = "importGoods";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -129,6 +138,7 @@ const createInputProduct = async (knex) => {
       table.integer("intoMoney").notNullable();
       exoend(table);
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -139,6 +149,7 @@ const createCost = async (knex) => {
     const tbl = "expense";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -151,6 +162,7 @@ const createCost = async (knex) => {
       table.string("note");
       exoend(table);
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
@@ -161,6 +173,7 @@ const createCongNoKh = async (knex) => {
     const tbl = "debt";
     const hasTable = await knex.schema.hasTable(tbl);
     if (hasTable) {
+      console.log(tbl,'already exist!');
       return tbl;
     }
     await knex.schema.createTable(tbl, (table) => {
@@ -176,11 +189,13 @@ const createCongNoKh = async (knex) => {
       table.datetime("payDay");
       exoend(table);
     });
+    console.log(tbl,'successfully created');
     return tbl;
   } catch (error) {
     console.error(error.message);
   }
 };
+
 const initTable = async (knex) => {
   let tables = [];
   // await createUsersTable(knex);

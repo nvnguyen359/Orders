@@ -1,4 +1,7 @@
 <p>orders works!</p>
+<mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+<mat-paginator [length]="resultsLength" [pageSize]="pageSize" (page)="getServerData($event)" [pageSizeOptions]="[pageSize, 10, 25, 100]">
+</mat-paginator>
 <div class="fixed bottom">
     <button mat-fab color="warn" aria-label="Example icon button with a home icon" (click)="openDialog()">
       <mat-icon>add</mat-icon>

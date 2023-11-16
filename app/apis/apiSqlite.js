@@ -27,8 +27,6 @@ const getAllOrders = ( app) => {
     listOrders  = Array.from(listOrders).map((x)=>{
 
     })
-    
-    // const listOrdersDetails = await crud.findAll();
     res.send(listOrders);
     next();
   });
@@ -43,9 +41,11 @@ const upsert = (element, app, crud) => {
 const findAll = (element, app, crud) => {
   app.get(`/api/${element}`, async (req, res, next) => {
     const q = req.query;
-    const limit = q.limit | 100;
-    const offset = q.offset | 0;
-    res.send(await crud.findAll( q.query,limit, offset));
+   // console.log(q)
+    const limit = parseInt(q.pageSize) ||parseInt(q.limit);
+    const offset = parseInt(q.page) || 0;
+   // console.log(limit, offset)
+    res.send(await crud.findAll( q.query,limit, offset*limit));
     next();
   });
 };
@@ -76,4 +76,4 @@ const getAllTables = async () => {
   return tables;
 };
 
-module.exports = { apisSqlite };
+module.exports = { apisSqlite,getAllTables };

@@ -9,7 +9,7 @@ interface String {
   capitalizeFirstLetter(): string;
 }
 interface Array<T> {
-  convertDateVNView(): any[];
+  convertDateVNView(): any;
 }
 
 interface Date {
@@ -118,13 +118,18 @@ String.prototype.capitalizeFirstLetter = function () {
 };
 
 Array.prototype.convertDateVNView = function () {
-  let array = this as any[];
-  array = array.map((x: any) => {
-    let ngays = ["Ngày", "Ngày Bán"];
-    ngays.forEach((ngay: any) => {
-      if (x[ngay]) x[ngay] = `${x[ngay]}`.DateFormatDDMMYYY();
+  try {
+    //console.log(this)
+    let array = this as any[];
+    array = array.map((x: any) => {
+      let ngays = ["createdAt", "updatedAt"];
+      ngays.forEach((ngay: any) => {
+        if (x[ngay]) x[ngay] = `${x[ngay]}`.DateFormatDDMMYYY();
+      });
+      return x;
     });
-    return x;
-  });
-  return array;
+    return array;
+  } catch (error) {
+    return this;
+  }
 };

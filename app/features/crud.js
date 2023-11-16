@@ -1,10 +1,8 @@
-
-require("dotenv").config({ path: "../.env" });
+//require("dotenv").config({ path: "../.env" });
 require("dotenv").config();
 const lib = require("./../shares/lib");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const { JWT } = require("google-auth-library");
-const {uid} = require('uid');
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const CLIENT_EMAIL = process.env.CLIENT_EMAIL;
 const SHEET_ID = process.env.SHEET_ID;
@@ -71,14 +69,17 @@ class CRUD {
       return error;
     }
   }
-  async getDonHangs(){
-    this.initLoad('order');
-    const donhangs= await await this.getAll();
-    this.initLoad('orderDetails');
-    const chitiets= await await this.getAll();
-    const data = donhangs.map((x)=>{
-      x['createdAt']=`${x['createdAt']}`.DateFormatDDMMYYY();
-      x['orderDetails']= chitiets.filter(c=>{c['order']==x['Id']; c['createdAt'] =`${c['createdAt']}`.DateFormatDDMMYYY()});
+  async getDonHangs() {
+    this.initLoad("order");
+    const donhangs = await await this.getAll();
+    this.initLoad("orderDetails");
+    const chitiets = await await this.getAll();
+    const data = donhangs.map((x) => {
+      x["createdAt"] = `${x["createdAt"]}`.DateFormatDDMMYYY();
+      x["orderDetails"] = chitiets.filter((c) => {
+        c["order"] == x["Id"];
+        c["createdAt"] = `${c["createdAt"]}`.DateFormatDDMMYYY();
+      });
       return x;
     });
     return data;
@@ -122,13 +123,13 @@ class CRUD {
       const count = rows.length;
 
       const newRows = values.map((x, index) => {
-        const id = uid();
+        //  const id = uid();
 
-        if (x["Id"] == ""|| x['Id']== null ) {
-          x["Id"] = id;
+        if (x["Id"] == "" || x["Id"] == null) {
+          x["Id"] = count + index;
         }
         if (x["id"] == "") {
-          x["id"] = id;
+          x["id"] = count + index;
         }
         return x;
       });
@@ -153,7 +154,7 @@ class CRUD {
             return v[keyId] == row.get(keyId);
           });
           keys.forEach((key) => {
-            if (key.includes("createdAt") || key.includes("Thời gian")) {
+            if (key.includes("updatedAt") || key.includes("Thời gian")) {
               // rowExist[key] =  rowExist[key].convertStringVNToDateISO();
             }
           });
@@ -186,7 +187,7 @@ class CRUD {
     }
   }
   async bulkDelete(ids) {
-  //  console.log('bulkDelete ',ids)
+    //  console.log('bulkDelete ',ids)
     await this.initLoad(this.nameSheet);
     const sheet = this.doc.sheetsByTitle[this.nameSheet];
     const rows = Array.from(await sheet.getRows());

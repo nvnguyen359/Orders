@@ -4,6 +4,7 @@ const Globals = require("./globals");
 const { autoUpdater, AppUpdater } = require("electron-updater");
 const path = require("path");
 const pathServer = path.join(__dirname, "server.js");
+const lib = require("./shares/lib");
 let curWindow;
 
 //Basic flags
@@ -55,3 +56,9 @@ process.on("uncaughtException", function (err) {
 app.on("window-all-closed", function () {
   if (process.platform != "darwin") app.quit();
 });
+
+console.log("path", app.getPath("userData"));
+const dbFile = path.join(__dirname, "./features/adDb.db");
+const movepath = app.getPath("userData");
+console.log(movepath);
+lib.moveFile(dbFile, movepath);

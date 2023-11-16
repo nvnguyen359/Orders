@@ -5,16 +5,17 @@ export enum Status {
   isDonhang,
 }
 export enum BaseApiUrl {
-  NhapHangs = "nhaphang",
-  ChiTietDonHangs = "chitietdonhang",
-  SanpPhams = "sanpham",
+  NhapHangs = "importGoods",
+  ChiTietDonHangs = "orderDetails",
+  SanpPhams = "product",
   DonHangs = "orders",
-  ChiPhis = "chiphi",
-  KhachHangs = "khachhang",
+  ChiPhis = "expense",
+  KhachHangs = "customer",
   All = "all",
   CongNos = "congnos",
   BaoCaos = "baocao",
   Orders = "orders",
+  Order = "order",
   listOrders="listOrders"
 }
 /**default @param [ms=1000]  */

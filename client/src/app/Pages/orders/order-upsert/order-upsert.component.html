@@ -1,4 +1,7 @@
 <mat-tab-group>
-    <mat-tab [label]="first"> Content 1 </mat-tab>
-    <mat-tab [label]="second"> Content 2 </mat-tab>
+    <mat-tab [label]="first"> 
+        <app-order-grid></app-order-grid>
+    </mat-tab>
+    <mat-tab [label]="second"> 
+        <app-order-list-view></app-order-list-view> </mat-tab>
 </mat-tab-group>

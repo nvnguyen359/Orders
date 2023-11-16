@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular
 import{environment} from './../environment'
 import { Observable, catchError, retry, throwError } from "rxjs";
 import { BaseApiUrl } from "../general";
+
 @Injectable({
   providedIn: "root",
 })
@@ -31,18 +32,23 @@ export class ApiService {
   constructor(private http: HttpClient) {
     this.baseServer= environment.baseUrl
   }
-  async get(url: string, name = "") {
+  async get(url: string,params:any, name = "") {
+    console.log(params)
     // const params = new HttpParams({fromString: name});
+    const entries = Object.entries(params);
+    let pas='';
+    entries.forEach((x:any)=>{pas+= `${x[0]}=${x[1]}&`})
     const n = name ? name : "";
     this.httpOptions.headers.set("printerName", n);
-    const pathUrl = `${this.baseServer}/${url}`;
+    const pathUrl = `${this.baseServer}/${url}?${pas}`;
+    console.log(pathUrl)
     return new Promise((res, rej) => {
       this.http.get(pathUrl, this.httpOptions).pipe(
         retry(3), // retry a failed request up to 3 times
         catchError(this.handleError)
       ).subscribe((data:any) => {
         if(Array.isArray(data)){
-          let dt = !BaseApiUrl.Orders ?Array.from(data).convertDateVNView():Array.from(data);
+          let dt = !BaseApiUrl.Orders ?Array.from(data):Array.from(data);
           return res(dt);
         }else{
           res(data)

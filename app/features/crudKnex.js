@@ -1,11 +1,11 @@
 require("dotenv").config();
-const path = require('path');
-console.log(process.env.SQLITE_FILENAME) 
+const path = require("path");
+console.log(process.env.SQLITE_FILENAME);
 const { initTable } = require("./createTable");
 const knex = require("knex")({
   client: "sqlite",
   connection: {
-    filename: path.join(__dirname,process.env.SQLITE_FILENAME),
+    filename: path.join(__dirname, process.env.SQLITE_FILENAME),
   },
   useNullAsDefault: true,
 });
@@ -14,7 +14,7 @@ class CRUDKNEX {
     this.table = table;
   }
   async initTable() {
-   return await initTable(knex);
+    return await initTable(knex);
   }
   set setTable(table) {
     this.table = table;
@@ -42,16 +42,22 @@ class CRUDKNEX {
   async destroy(id) {
     return await knex(this.table).where({ id }).delete();
   }
-  async findAll(query = "",limit = 100, offset = 0) {
+  async findAll(query = "", limit, offset = 0) {
+   
+   return new Promise(async(res,rej)=>{
     const result =
-      query == ""
-        ? await knex(this.table).select("*").limit(limit).offset(offset)
-        : await knex.raw(query);
-    console.log("result", result);
-    return result;
+    query == ""
+      ? await knex(this.table).select("*").limit(limit).offset(offset)
+      : await knex.raw(query);
+      knex(this.table).count("id as CNT").then((total)=>{
+       // console.log(total[0].CNT);
+        res ({ items: result, count: total[0].CNT });
+      })
+   })
+    
   }
   async findId(id) {
-    return await knex(this.table).where({ id}).first();
+    return await knex(this.table).where({ id }).first();
   }
   async filterWithObj(obj) {
     return await knex(this.table).where(obj);
