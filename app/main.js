@@ -5,6 +5,8 @@ const { autoUpdater, AppUpdater } = require("electron-updater");
 const path = require("path");
 const pathServer = path.join(__dirname, "server.js");
 const lib = require("./shares/lib");
+const movepath = app.getPath("userData");
+lib.setEnvValue('localDatabase',movepath)
 let curWindow;
 
 //Basic flags
@@ -57,8 +59,6 @@ app.on("window-all-closed", function () {
   if (process.platform != "darwin") app.quit();
 });
 
-console.log("path", app.getPath("userData"));
-const dbFile = path.join(__dirname, "./features/adDb.db");
-const movepath = app.getPath("userData");
-console.log(movepath);
-lib.moveFile(dbFile, movepath);
+// console.log("path", app.getPath("userData"));
+// const dbFile = path.join(__dirname, "./features/adDb.db");
+

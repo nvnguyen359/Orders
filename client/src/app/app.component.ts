@@ -1,5 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { DateAdapter, MAT_DATE_LOCALE } from "@angular/material/core";
+import "./lib.extensions"
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",

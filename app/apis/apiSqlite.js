@@ -8,32 +8,51 @@ const apisSqlite = async (app) => {
     findId(element, app, crud);
     findOne(element, app, crud);
     upsert(element, app, crud);
+    create(element, app, crud);
     destroy(element, app, crud);
   });
   getAllOrders(app);
   // let crud = new CRUDKNEX("Đơn Hàng");
   // getAll("donhang", app, crud);
+  return app;
 };
 const getAllOrders = (app) => {
   app.get(`/api/orders`, async (req, res, next) => {
     const q = req.query;
-    const limit = q.limit || 100;
-    const offset = q.offset || 0;
+    const column = q.columns ? q.columns.split(",") : [];
+    const limit = parseInt(q.pageSize) || parseInt(q.limit) || 100;
+    const offset = parseInt(q.page) || 0;
     let crud = new CRUDKNEX("order");
-    let listOrders = await crud.findAll(q.query, limit, offset);
+    let listOrders = await crud.findAll(q.query, column, limit, offset * limit);
+
     let crudDetails = new CRUDKNEX("orderDetails");
-    listOrders = Array.from(listOrders).map((x) => {});
-    res.send(listOrders);
+    let result = [];
+    for (let i = 0; i < listOrders.items.length; i++) {
+      let x = listOrders.items[i];
+      x.details = await crudDetails.filterWithObj({ orderId: x.id });
+      result.push(x);
+    }
+    res.send({ count: listOrders.count, items: result });
     next();
   });
 };
 const upsert = (element, app, crud) => {
   app.put(`/api/${element}`, async (req, res, next) => {
     const row = req.body ? req.body : null;
-    res.send(await crud.upsert(row));
+    const result = await crud.upsert(row);
+    res.send({ result });
     next();
   });
 };
+const create = (element, app, crud) => {
+  app.post(`/api/${element}`, async (req, res, next) => {
+    const row = req.body ? req.body : null;
+    const result = await crud.create(row);
+    res.send({ result });
+    next();
+  });
+};
+
 const findAll = (element, app, crud) => {
   app.get(`/api/${element}`, async (req, res, next) => {
     const q = req.query;
@@ -55,14 +74,16 @@ const findId = (element, app, crud) => {
 const findOne = (element, app, crud) => {
   app.get(`/api/${element}/obj`, async (req, res, next) => {
     const id = req.params.id;
-    res.send(await crud.findId(id));
+    const result=await crud.findId(id);
+    res.send(result);
     next();
   });
 };
 const destroy = (element, app, crud) => {
   app.delete(`/api/${element}/:id`, async (req, res, next) => {
     const id = req.params.id;
-    res.send(await crud.destroy(id));
+    const result = await crud.destroy(id);
+    res.send({ result });
     next();
   });
 };
@@ -71,5 +92,6 @@ const getAllTables = async () => {
   const tables = await crud.initTable();
   return tables;
 };
+
 
 module.exports = { apisSqlite, getAllTables };

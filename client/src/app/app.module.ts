@@ -28,9 +28,12 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { DialogConfirmComponent } from './Components/dialog-confirm/dialog-confirm.component';
+import { MatDialogModule } from "@angular/material/dialog";
+import { PrintersComponent } from "./Components/printers/printers.component";
 
 @NgModule({
-  declarations: [AppComponent, SpinnerComponent, MenuLeftComponent],
+  declarations: [AppComponent, SpinnerComponent, MenuLeftComponent, DialogConfirmComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -75,7 +78,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatIconModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,PrintersComponent
   ],
   providers: [MatDatepickerModule, {
     provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true

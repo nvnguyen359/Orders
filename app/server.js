@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./../.env" });
+const {getListPrinter,allApisPrinter}= require('./apis/apiInfo')
 //require('./apis/importData')
 var bodyParser = require("body-parser");
 const path = require("path");
@@ -73,12 +74,11 @@ app.use(
 app.use(express.static("public"));
 // apis.callApis(app);
   apisSqlite(app);
+  allApisPrinter(app);
 app.use("/uploads", express.static("uploads"));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/imgs", express.static(path.join(__dirname, "imgs")));
 app.use("/public", express.static("public"));
 app.use("/app/public", express.static("public"));
-
-//C:\Users\Default\AppData\Local\Temp move data
 
 module.exports = app;

@@ -8,6 +8,8 @@ import {
 import { environment } from "./../environment";
 import { Observable, catchError, retry, throwError } from "rxjs";
 import { BaseApiUrl } from "../general";
+import { MatDialog } from "@angular/material/dialog";
+import { DialogConfirmComponent } from "../Components/dialog-confirm/dialog-confirm.component";
 
 @Injectable({
   providedIn: "root",
@@ -17,10 +19,11 @@ export class ApiService {
     //
     headers: new HttpHeaders({
       "Content-Type": "application/json",
-      responseType: "blob"
+      responseType: "blob",
     }),
   };
   private handleError(error: HttpErrorResponse) {
+    console.log('error',error)
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error("An error occurred:", error.error);
@@ -38,8 +41,22 @@ export class ApiService {
     );
   }
   baseServer = "";
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dialog: MatDialog) {
     this.baseServer = environment.baseUrl;
+  }
+  async postPrinters(order:any){
+    const pathUrl = `${this.baseServer}/printers`;
+    return new Promise((res, rej) => {
+      this.http
+        .post(pathUrl, order, this.httpOptions)
+        .pipe(
+          retry(3), // retry a failed request up to 3 times
+          catchError(this.handleError)
+        )
+        .subscribe((e) => {
+          res(e);
+        });
+    });
   }
   async get(url: string, params?: any, name = "") {
     let pas = "";
@@ -104,7 +121,8 @@ export class ApiService {
     let req = !Array.isArray(data) ? [data] : data;
 
     req = Array.from(data).map((x: any) => {
-      x["Id"] = "";
+      if(!x.id|| x.id=='')
+      x["id"] = null;
       return x;
     });
     //console.log("data", data);
@@ -122,10 +140,30 @@ export class ApiService {
         });
     });
   }
-  async destroy(url: string, id: any) {
+  async destroy(url: string, id: any,showDialog=true) {
     const pathUrl = `${this.baseServer}/${url}/${id}`;
-    return new Promise((res, rej) => {
-      this.http
+    if(showDialog){
+      const dialogRef = this.dialog.open(DialogConfirmComponent, {
+        data: { header: "Bạn chắc chắn muốn xóa!" },
+      });
+      return new Promise((res, rej) => {
+        dialogRef.afterClosed().subscribe((result: any) => {
+          if (result == true) {
+            this.http
+            .delete(pathUrl, this.httpOptions)
+            .pipe(
+              retry(3), // retry a failed request up to 3 times
+              catchError(this.handleError)
+            )
+            .subscribe((e) => {
+              res(e);
+            });
+          }
+        });
+      });
+    }else{
+      return new Promise((res, rej) => {
+        this.http
         .delete(pathUrl, this.httpOptions)
         .pipe(
           retry(3), // retry a failed request up to 3 times
@@ -134,7 +172,10 @@ export class ApiService {
         .subscribe((e) => {
           res(e);
         });
-    });
+      });
+    }
+
+  
   }
   async bulkDelete(url: string, ids: any) {
     const pathUrl = `${this.baseServer}/${url}?ids=${ids}`;

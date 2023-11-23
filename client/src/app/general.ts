@@ -13,11 +13,13 @@ export enum BaseApiUrl {
   KhachHangs = "customer",
   All = "all",
   CongNos = "congnos",
-  BaoCaos = "baocao",
+  BaoCaos = "reports",
   Orders = "orders",
   Order = "order",
-  listOrders="listOrders"
+  listOrders = "listOrders",
+  Printers = "printers",
 }
+
 /**default @param [ms=1000]  */
 export function delay(ms: number = 1000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -81,6 +83,10 @@ export function getStarEndDateInQuarter(quarter = 1, y: number) {
   const fl = firstlastMonth(y, startMonth - 1);
   const fl1 = firstlastMonth(y, endMonth - 1);
   return { firstDate: fl.firstDay, lastDate: fl1.lastDay };
+}
+export function getLocalStorage(key: any = "print") {
+  const local = JSON.parse(`${localStorage.getItem(key)}`);
+  return local;
 }
 var ChuSo = new Array(
   " không ",

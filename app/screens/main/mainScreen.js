@@ -5,8 +5,8 @@ class MainScreen {
   window;
 
   position = {
-    width: 1000,
-    height: 600,
+    width: 1360,
+    height: 768,
     maximized: false,
   };
 
@@ -39,7 +39,7 @@ class MainScreen {
     let wc = this.window.webContents;
     wc.openDevTools({ mode: "undocked" });
 
-    this.window.loadFile("./screens/main/main.html");
+    this.window.loadFile("./screens/main/dist/index.html");
   }
 
   showMessage(message) {

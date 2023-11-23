@@ -7,5 +7,5 @@ import { LoaderService } from "src/app/services/loader.service";
   styleUrls: ["./spinner.component.scss"],
 })
 export class SpinnerComponent {
-  constructor(public loader: LoaderService) {console.log('spin')}
+  constructor(public loader: LoaderService) {}
 }
