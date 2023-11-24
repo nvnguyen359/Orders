@@ -215,6 +215,11 @@ export class InforCustomerInOrderComponent {
   onDeleteDetail(item: any) {
     const id = item.detailsId;
     this.dataService.sendMessage({ delDetails: id });
-    item.quantity = 0;
+    this.dataService.currentMessage.subscribe((result: any) => {
+      if (result?.resultDelete) {
+        item.quantity = 0;
+        this.onCal();
+      }
+    });
   }
 }

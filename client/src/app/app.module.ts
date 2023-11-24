@@ -12,7 +12,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import { MenuLeftComponent } from './Components/menu-left/menu-left.component';
-import { NgIf, NgFor } from "@angular/common";
+import { NgIf, NgFor, CommonModule } from "@angular/common";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -35,6 +35,7 @@ import { PrintersComponent } from "./Components/printers/printers.component";
 @NgModule({
   declarations: [AppComponent, SpinnerComponent, MenuLeftComponent, DialogConfirmComponent],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

@@ -60,5 +60,8 @@ app.on("window-all-closed", function () {
 });
 
 // console.log("path", app.getPath("userData"));
-// const dbFile = path.join(__dirname, "./features/adDb.db");
+ const originFile = path.join(__dirname, "./features/adDb.db");
+ const newFile = process.env.localDatabase;
+ console.log(newFile)
+ lib.moveFile(originFile,newFile)
 

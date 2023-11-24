@@ -3,7 +3,9 @@ export enum Status {
   Add,
   LoadOrder,
   isDonhang,
+  resultDelete='resultDelete'
 }
+
 export enum BaseApiUrl {
   NhapHangs = "importGoods",
   ChiTietDonHangs = "orderDetails",
@@ -19,7 +21,50 @@ export enum BaseApiUrl {
   listOrders = "listOrders",
   Printers = "printers",
 }
-
+export function links() {
+  return [
+    {
+      text: "Trang Chủ",
+      link: `/${BaseApiUrl.BaoCaos}`,
+      icon: "home",
+    },
+    {
+      text: "Đơn Hàng",
+      link: `/${BaseApiUrl.DonHangs}`,
+      icon: "shopping_basket",
+    },
+    {
+      text: "Sản Phẩm",
+      link: `/${BaseApiUrl.SanpPhams}`,
+      icon: "spa",
+    },
+    {
+      text: "Nhập  - Tồn Kho",
+      link: `/${BaseApiUrl.NhapHangs}`,
+      icon: "credit_card",
+    },
+    {
+      text: "Khách Hàng",
+      link: `/${BaseApiUrl.KhachHangs}`,
+      icon: "account_box",
+    },
+    {
+      text: "Chi Phí",
+      link: `/${BaseApiUrl.ChiPhis}`,
+      icon: "money",
+    },
+    {
+      text: "Công Nợ",
+      link: `/${BaseApiUrl.CongNos}`,
+      icon: "monetization_on",
+    },
+    {
+      text: "Cài Dặt",
+      link: "/settings",
+      icon: "settings",
+    },
+  ];
+}
 /**default @param [ms=1000]  */
 export function delay(ms: number = 1000) {
   return new Promise((resolve) => setTimeout(resolve, ms));

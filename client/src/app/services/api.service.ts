@@ -7,9 +7,10 @@ import {
 } from "@angular/common/http";
 import { environment } from "./../environment";
 import { Observable, catchError, retry, throwError } from "rxjs";
-import { BaseApiUrl } from "../general";
+import { BaseApiUrl, Status } from "../general";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogConfirmComponent } from "../Components/dialog-confirm/dialog-confirm.component";
+import { DataService } from "./data.service";
 
 @Injectable({
   providedIn: "root",
@@ -41,7 +42,7 @@ export class ApiService {
     );
   }
   baseServer = "";
-  constructor(private http: HttpClient, private dialog: MatDialog) {
+  constructor(private http: HttpClient, private dialog: MatDialog,private dataService:DataService) {
     this.baseServer = environment.baseUrl;
   }
   async postPrinters(order:any){
@@ -159,6 +160,7 @@ export class ApiService {
               res(e);
             });
           }
+          this.dataService.sendMessage({resultDelete: result})
         });
       });
     }else{
