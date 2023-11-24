@@ -37,13 +37,13 @@ export class ReportsComponent {
     end: new FormControl<Date | null>(null),
   });
 
-  title = `Ngày ${new Date().toLocaleDateString()}`;
+  title = `Ngày ${new Date().toLocaleDateString('vi')}`;
   constructor(private service: ApiService, private dataService: DataService) {
     // console.log(new Date().firstLastYear());
     const date = firstLastDate();
     this.firstDay = date.firstDate;
     this.lastDay = date.lastDate;
-    this.title = `Ngày ${new Date().toLocaleDateString()}`;
+    this.title = `Ngày ${new Date().toLocaleDateString('vi')}`;
   }
   async ngOnInit() {
     this.getMonths();

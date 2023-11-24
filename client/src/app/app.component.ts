@@ -12,7 +12,7 @@ import { filter } from "rxjs";
 export class AppComponent {
   title = "client";
   showFiller = false;
-  pageName?:string = "My App";
+  pageName?:string = "Trang Chủ";
   constructor(
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
@@ -21,7 +21,6 @@ export class AppComponent {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationStart) {
         const url = event.url;
-        console.log(url);
         this.pageName = links().find((x: any) => x.link == url)?.text;
       }
     });
@@ -31,7 +30,7 @@ export class AppComponent {
     setTimeout(() => {
       if (location.pathname == "/")
         this.router.navigate([`/${BaseApiUrl.BaoCaos}`]);
-    }, 500);
+    }, 1000);
   }
   vi() {
     this._locale = "vi";

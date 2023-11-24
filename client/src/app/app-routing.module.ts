@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { BaseApiUrl } from "./general";
 
 const routes: Routes = [
+  { path: '',   redirectTo: `/${BaseApiUrl.BaoCaos}`, pathMatch: 'full' }, // redirect to ,
   {
     path: BaseApiUrl.Orders,
     loadChildren: () =>
