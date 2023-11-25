@@ -17,8 +17,7 @@ import {
 import { DataService } from "src/app/services/data.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { PrintHtmlService } from "src/app/services/print-html.service";
-import { async } from "rxjs";
-
+import { MatSnackBar } from "@angular/material/snack-bar";
 @Component({
   selector: "app-orders",
   templateUrl: "./orders.component.html",
@@ -73,7 +72,8 @@ export class OrdersComponent {
     private service: ApiService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dataService: DataService,
-    private printHtmt: PrintHtmlService
+    private printHtmt: PrintHtmlService,
+    private snckbar:MatSnackBar
   ) {}
   async ngOnInit() {
     this.getOrders();
@@ -237,7 +237,16 @@ export class OrdersComponent {
       order.pageSize = local.page.pageSize;
       order.rawHtml = rawHtml;
       order.isPreview = local.isPreview;
-      await this.service.postPrinters(order);
+      this.service.postPrinters(order).then((result:any)=>{
+        if(result.error){
+         // console.log(result.error,result.text)
+          this.service.translate(result.text).then((data:any)=>{
+            this.snckbar.open(data,'',{duration:13000})
+          })
+        }
+      }).catch((error:any)=>{
+        console.log(error)
+      });
     } else {
       this.printHtmt.printBill();
     }

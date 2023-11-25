@@ -10,6 +10,7 @@ function posPrintThermal(order) {
     timeOutPerLine: 1000,
     pageSize: order?.pageSize || "80mm", // page size
   };
+  console.log(order)
   const qrCode={
     type: "image",
     url: urlImg, // file path
@@ -35,20 +36,20 @@ function posPrintThermal(order) {
       tableFooterStyle: { backgroundColor: "#000", color: "white" },
     },
   ];
-
+ 
   try {
     return new Promise((res, rej) => {
       PosPrinter.print(data, options)
-        .then((data) => res(data))
+        .then((data) => res({data:'done'}))
         .catch((error) => {
-          console.error(error);
+          console.error('error',error);
           res(error);
         });
     });
   } catch (e) {
     // console.log(PosPrinter);
     console.log(e);
-    return new Promise((res, rej) => res(e));
+   return e
   }
 }
 

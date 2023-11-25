@@ -6,11 +6,13 @@ import {
   HttpParams,
 } from "@angular/common/http";
 import { environment } from "./../environment";
-import { Observable, catchError, retry, throwError } from "rxjs";
-import { BaseApiUrl, Status } from "../general";
+import { Observable, async, catchError, retry, throwError } from "rxjs";
+import { BaseApiUrl, Status, delay } from "../general";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogConfirmComponent } from "../Components/dialog-confirm/dialog-confirm.component";
 import { DataService } from "./data.service";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { AnimationStyleMetadata } from "@angular/animations";
 
 @Injectable({
   providedIn: "root",
@@ -23,29 +25,31 @@ export class ApiService {
       responseType: "blob",
     }),
   };
-  private handleError(error: HttpErrorResponse) {
-    console.log('error',error)
+  private async handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error("An error occurred:", error.error);
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong.
+      //
       console.error(
         `Backend returned code ${error.status}, body was: `,
         error.error
       );
     }
-    // Return an observable with a user-facing error message.
-    return throwError(
-      () => new Error("Something bad happened; please try again later.")
-    );
+    return error.error;
   }
   baseServer = "";
-  constructor(private http: HttpClient, private dialog: MatDialog,private dataService:DataService) {
+  constructor(
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private dataService: DataService,
+    private snackBar: MatSnackBar
+  ) {
     this.baseServer = environment.baseUrl;
   }
-  async postPrinters(order:any){
+  async postPrinters(order: any) {
     const pathUrl = `${this.baseServer}/printers`;
     return new Promise((res, rej) => {
       this.http
@@ -122,8 +126,7 @@ export class ApiService {
     let req = !Array.isArray(data) ? [data] : data;
 
     req = Array.from(data).map((x: any) => {
-      if(!x.id|| x.id=='')
-      x["id"] = null;
+      if (!x.id || x.id == "") x["id"] = null;
       return x;
     });
     //console.log("data", data);
@@ -141,9 +144,9 @@ export class ApiService {
         });
     });
   }
-  async destroy(url: string, id: any,showDialog=true) {
+  async destroy(url: string, id: any, showDialog = true) {
     const pathUrl = `${this.baseServer}/${url}/${id}`;
-    if(showDialog){
+    if (showDialog) {
       const dialogRef = this.dialog.open(DialogConfirmComponent, {
         data: { header: "Bạn chắc chắn muốn xóa!" },
       });
@@ -151,41 +154,44 @@ export class ApiService {
         dialogRef.afterClosed().subscribe((result: any) => {
           if (result == true) {
             this.http
-            .delete(pathUrl, this.httpOptions)
-            .pipe(
-              retry(3), // retry a failed request up to 3 times
-              catchError(this.handleError)
-            )
-            .subscribe((e) => {
-              res(e);
-            });
+              .delete(pathUrl, this.httpOptions)
+              .pipe(
+                retry(3), // retry a failed request up to 3 times
+                catchError(this.handleError)
+              )
+              .subscribe((e) => {
+                res(e);
+              });
           }
-          this.dataService.sendMessage({resultDelete: result})
+          this.dataService.sendMessage({ resultDelete: result });
         });
       });
-    }else{
+    } else {
       return new Promise((res, rej) => {
         this.http
-        .delete(pathUrl, this.httpOptions)
-        .pipe(
-          retry(3), // retry a failed request up to 3 times
-          catchError(this.handleError)
-        )
-        .subscribe((e) => {
-          res(e);
-        });
+          .delete(pathUrl, this.httpOptions)
+          .pipe(
+            retry(3), // retry a failed request up to 3 times
+            catchError(this.handleError)
+          )
+          .subscribe((e) => {
+            res(e);
+          });
       });
     }
-
-  
   }
   async bulkDelete(url: string, ids: any) {
-    const pathUrl = `${this.baseServer}/${url}?ids=${ids}`;
-    console.log(pathUrl);
-    return new Promise((res, rej) => {
-      this.http.delete(pathUrl, this.httpOptions).subscribe((e) => {
-        res(e);
-      });
+    return new Promise(async(res, rej) => {
+      let data:any = [];
+      for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        const pathUrl = `${this.baseServer}/${url}/${id}`;
+        this.http.delete(pathUrl, this.httpOptions).subscribe((e) => {
+          data.push(e);
+        });
+        await delay(100)
+      }
+      res(data);
     });
   }
 
@@ -198,5 +204,17 @@ export class ApiService {
         console.log(e);
         // window.location.href = url
       });
+  }
+  async translate(text: any) {
+    return new Promise((res, rej) => {
+      this.http
+        .get(
+          ` https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=vi&dt=t&q=${text}`
+        )
+        .subscribe((e) => {
+          const arr = e as any;
+          res(arr[0][0][0]);
+        });
+    });
   }
 }

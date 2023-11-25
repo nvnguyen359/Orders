@@ -8,7 +8,7 @@ export class ColumnOrdersPipe implements PipeTransform {
     //console.log(key)
     const columnsToDisplay = [
       { key: "no", value: "#" },
-      { key: "name", value: "Khách Hàng" },
+      { key: "name", value: "Tên" },
       { key: "status", value: "Trạng Thái" },
       { key: "wage", value: "Tiền Công" },
       { key: "discount", value: "Chiết Khấu" },
@@ -17,6 +17,10 @@ export class ColumnOrdersPipe implements PipeTransform {
       { key: "intoMney", value: "Thành Tiền" },
       { key: "pay", value: "Thanh Toán" },
       { key: "createdAt", value: "Ngày" },
+      { key: "price", value: "Gía Bán" },
+      { key: "importPrice", value: "Gía Nhập" },
+      { key: "unit", value: "Đơn Vị" },
+      { key: "no", value: "#" },
     ];
     const name = columnsToDisplay.find((x: any) => x.key == key)?.value;
     return name;

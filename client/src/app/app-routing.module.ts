@@ -21,6 +21,7 @@ const routes: Routes = [
         (m) => m.CustomersModule
       ),
   },
+  { path: BaseApiUrl.SanpPhams, loadChildren: () => import('./Pages/products/products.module').then(m => m.ProductsModule) },
 ];
 
 @NgModule({

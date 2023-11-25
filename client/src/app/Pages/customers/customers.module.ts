@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule,NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 
 import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomersComponent } from './customers.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -20,11 +20,14 @@ import { AutocompleteComponent } from 'src/app/Components/autocomplete/autocompl
 import { InforCustomerInOrderComponent } from 'src/app/Components/infor-customer-in-order/infor-customer-in-order.component';
 import { StatusComponent } from 'src/app/Components/status/status.component';
 import { OrdersRoutingModule } from '../orders/orders-routing.module';
+import { ExpansionTableComponent } from 'src/app/Components/expansion-table/expansion-table.component';
+import { UpsertCustomerComponent } from './upsert-customer/upsert-customer.component';
 
 
 @NgModule({
   declarations: [
-    CustomersComponent
+    CustomersComponent,
+    UpsertCustomerComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +51,12 @@ import { OrdersRoutingModule } from '../orders/orders-routing.module';
     FormsModule,
     MatAutocompleteModule,
     StatusComponent,
-    InforCustomerInOrderComponent
+    InforCustomerInOrderComponent,
+    ExpansionTableComponent,
+    ReactiveFormsModule
+  ],schemas: [
+    CUSTOM_ELEMENTS_SCHEMA,
+    NO_ERRORS_SCHEMA
   ]
 })
 export class CustomersModule { }

@@ -31,6 +31,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DialogConfirmComponent } from './Components/dialog-confirm/dialog-confirm.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { PrintersComponent } from "./Components/printers/printers.component";
+import { ExpansionTableComponent } from './Components/expansion-table/expansion-table.component';
+import { DynamicUpsertComponent } from './Components/dynamic-upsert/dynamic-upsert.component';
 
 @NgModule({
   declarations: [AppComponent, SpinnerComponent, MenuLeftComponent, DialogConfirmComponent],

@@ -3,7 +3,7 @@ export enum Status {
   Add,
   LoadOrder,
   isDonhang,
-  resultDelete='resultDelete'
+  resultDelete = "resultDelete",
 }
 
 export enum BaseApiUrl {
@@ -64,6 +64,60 @@ export function links() {
       icon: "settings",
     },
   ];
+}
+export function fields() {
+  const data = [
+    {
+      field: "name",
+      type: "text",
+      text:'Tên',
+      require:true
+    },
+    {
+      field: "phone",
+      type: "phone",
+      text:'Điện Thoại',
+      require:true
+    },
+    {
+      field: "address",
+      type: "text",
+      text:'Địa Chỉ',
+      require:false
+    },
+    {
+      field: "email",
+      type: "email",
+      text:'Email',
+    },
+    {
+      field: "createdAt",
+      type: "date",
+      text:'Ngày Tạo'
+    },
+    {
+      field: "updatedAt",
+      type: "date",
+      text:'Ngày Cập Nhật'
+    },
+    {
+      field: "price",
+      type: "number",
+      text:'Đơn Giá',
+      step:500
+    },
+    {
+      field: "importPrice",
+      type: "number",
+      text:'Giá Nhập',
+      step:500
+    },{
+      field: "pay",
+      type: "number",
+      text:'Thanh Toán'
+    },
+  ];
+  return data;
 }
 /**default @param [ms=1000]  */
 export function delay(ms: number = 1000) {

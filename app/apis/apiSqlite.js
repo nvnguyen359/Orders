@@ -87,6 +87,7 @@ const destroy = (element, app, crud) => {
     next();
   });
 };
+
 const getAllTables = async () => {
   let crud = new CRUDKNEX();
   const tables = await crud.initTable();

@@ -34,9 +34,9 @@ export class PrintHtmlService {
   private getStyleTbody(item: Details) {
     const pageSize = parseInt(`${this.pageSize}`.replace("mm", ""));
     let html = `<tr>
-                  <td>${item.no}</td>
-                  <td>${item.name}</td>
-                  <td style="text-align: right">${item.quantity.toLocaleString(
+                  <td class="text-center">${item.no}</td>
+                  <td class="text-left">${item.name}</td>
+                  <td class="text-center">${item.quantity.toLocaleString(
                     "vi"
                   )}</td>
                   <td>${item.unit}</td>
@@ -121,7 +121,7 @@ export class PrintHtmlService {
     <tfoot>
         <tr>
             <th colspan="2" style="text-align: left;">Tổng Tiền</th>
-            <th colspan="1" style="text-align: right;" id="sumQuantity">(${order?.quantity.toLocaleString(
+            <th colspan="1" class="text-center" id="sumQuantity">(${order?.quantity.toLocaleString(
               "vi"
             )})</th>
             <th colspan="2"></th>
@@ -144,7 +144,12 @@ export class PrintHtmlService {
   }
   private getStyle() {
     return `
-              table{width:100%} 
+                .details,.page{
+                  width: 100%;
+              }
+              .pages{
+                width: 100%;
+              }
               .details,
               .details th,
               .details td {
@@ -165,8 +170,15 @@ export class PrintHtmlService {
                   display: flex;
               }
               .text-center{
-                text-align: center;
-            };
+                  text-align: center;
+              }
+              .text-align {
+                  text-align: right;
+              }
+              
+              .text-left {
+                  text-align: left;
+              };
            `;
   }
   rawHtml() {

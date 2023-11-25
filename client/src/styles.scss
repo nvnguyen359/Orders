@@ -20,16 +20,15 @@ body {
 
 .fixed.bottom {
     position: fixed;
-    bottom: 15px;
-    right: 15px;
+    bottom: 45px;
+    right: 5px;
     z-index: 100000;
 }
 
-.max-height {
-    max-height: 650px;
-    overflow: auto;
-}
 
+.text-center{
+    text-align: center;
+}
 .text-align {
     text-align: right;
 }
@@ -136,3 +135,28 @@ a {
     display: flex;
     align-items: center;
 }
+.iconAction{
+    cursor: pointer;
+}
+.text-left{
+    text-align: left;
+}
+.text-right{
+    text-align: right;
+}
+button{
+    transition: 0.4s all;
+}
+.disabled {
+    transition: 0.4s all;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    /*Button disabled - CSS color class*/
+    color: #ffffff!important;
+    background-color: #d6d4d4!important;
+  }
+  .max-height{
+    max-height: 520px;
+    overflow: auto;
+  }
