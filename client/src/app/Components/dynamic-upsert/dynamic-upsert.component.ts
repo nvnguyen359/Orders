@@ -108,20 +108,31 @@ export class DynamicUpsertComponent {
   onAdd() {
     const arr = this.form.controls["formArray"] as FormArray;
     let obj = this.data.obj;
+    console.log(obj)
     arr.push(this.fb.group(obj));
   }
   async onSubmit() {
+    console.log(this.form.value.createdAt);
     const array = this.form.value?.formArray.map((x: any) => {
       x.updatedAt = new Date();
+      x.createdAt = new Date(this.form.value.createdAt);
       return x;
     }) as any[];
+    const arrUpdate = array.filter((x: any) => x.id != "" || x.id != null);
+    const arrCreate = array.filter((x: any) => x.id == "" || x.id == null);
     const url = this.router.url.replace("/", "").trim();
-    this.service.get;
-    for (let index = 0; index < array.length; index++) {
-      const element = array[index];
-      const result = await this.service.update(url, element);
-      //console.log(result);
-      await delay(200);
+    console.log("arrUpdate", arrUpdate, arrUpdate.length);
+    if (arrUpdate.length > 0) {
+      for (let index = 0; index < arrUpdate.length; index++) {
+        const element = arrUpdate[index];
+        const result = await this.service.update(url, element);
+        //console.log(result);
+        await delay(200);
+      }
+    }
+    if (arrCreate.length > 0) {
+      console.log("create");
+      await this.service.create(url, arrCreate);
     }
     this.dialogRef.close(true);
     this.dataService.sendMessage({ status: Status.Refesh });

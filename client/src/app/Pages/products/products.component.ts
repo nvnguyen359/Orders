@@ -9,6 +9,7 @@ import { ApiService } from "src/app/services/api.service";
 import { UpsertCustomerComponent } from "../customers/upsert-customer/upsert-customer.component";
 import { Fields } from "src/app/Models/field";
 import { DynamicUpsertComponent } from "src/app/Components/dynamic-upsert/dynamic-upsert.component";
+import { Validators } from "@angular/forms";
 
 @Component({
   selector: "app-products",
@@ -21,13 +22,14 @@ export class ProductsComponent {
   options: any = {
     displayedColumns: ["no", ...this.columns],
   };
+  fieldFilter: any;
   constructor(
     private service: ApiService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
   onUpsert(event: any) {
-    console.log(event)
+    console.log(event);
     const fieldFilter = (fields() as Fields[])
       .filter((x: Fields) =>
         this.columns.concat(this.columnDate).includes(x.field)
@@ -45,6 +47,21 @@ export class ProductsComponent {
       data: { value: event, fields: fieldFilter },
     });
   }
-  onCreate(){}
+  onCreate() {
+    this.columns = ["name", "importPrice", "price", "unit"]
+    const obj = {
+      id: "",
+      name: ["", Validators.required],
+      importPrice: ["", Validators.required],
+      price: ["", Validators.required],
+      unit: ["", Validators.required],
+    };
+    this.fieldFilter = (fields() as Fields[]).filter((x: any) =>
+      this.columns.includes(x.field)
+    );
+    this.dialog.open(DynamicUpsertComponent, {
+      data: { value: [], fields: this.fieldFilter, obj },
+    });
+  }
   ngAfterViewInit() {}
 }

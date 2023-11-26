@@ -48,12 +48,11 @@ this.fieldFilter=(fields() as Fields[])
       name: ['',Validators.required],
       phone:['',Validators.required],
       address:[''],
-      email:'',
-      createdAt:[new Date()],
-      updatedAt:[new Date()]
+      email:''
     }
+    this.fieldFilter=(fields() as Fields[]).filter((x:any)=>this.columns.includes(x.field))
     this.dialog.open(DynamicUpsertComponent, {
-      data: { value:[], fields: this.fieldFilter,obj },
+      data: { value:[], fields:this.fieldFilter ,obj },
     });
   }
 }

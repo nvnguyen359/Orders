@@ -104,17 +104,21 @@ export function fields() {
       field: "price",
       type: "number",
       text:'Đơn Giá',
-      step:500
+      step:500, require:true
     },
     {
       field: "importPrice",
       type: "number",
       text:'Giá Nhập',
-      step:500
+      step:500, require:true
     },{
       field: "pay",
       type: "number",
       text:'Thanh Toán'
+    },{
+      field: "unit",
+      type: "text",
+      text:'Đơn Vị'
     },
   ];
   return data;
