@@ -56,6 +56,7 @@ export class DynamicUpsertComponent {
   infor = "Thêm Khách Hàng Mới";
   fieldsShow: any;
   fieldsHidden: any;
+  itemsDelete:any=[]
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
@@ -112,7 +113,7 @@ export class DynamicUpsertComponent {
     arr.push(this.fb.group(obj));
   }
   async onSubmit() {
-    console.log(this.form.value.createdAt);
+   
     const array = this.form.value?.formArray.map((x: any) => {
       x.updatedAt = new Date();
       x.createdAt = new Date(this.form.value.createdAt);
@@ -134,13 +135,19 @@ export class DynamicUpsertComponent {
       console.log("create");
       await this.service.create(url, arrCreate);
     }
+    if(this.itemsDelete.length>0){
+      
+    }
     this.dialogRef.close(true);
     this.dataService.sendMessage({ status: Status.Refesh });
   }
+
+  onDeleteItem(){}
   onDelete(index: any) {
     const ctrl = this.form.controls["formArray"];
     const value = ctrl.value;
     const removeItem = ctrl.value.at(index);
+    this.itemsDelete.push(removeItem)
     if (removeItem["id"] != "") this.removeAts.push(removeItem);
     ctrl.setValue(
       value
@@ -150,6 +157,7 @@ export class DynamicUpsertComponent {
     );
     ctrl.removeAt(value.length - 1);
     //console.log(this.removeAts)
+    console.log(this.itemsDelete)
     return;
   }
   trackByFn(index: any) {
