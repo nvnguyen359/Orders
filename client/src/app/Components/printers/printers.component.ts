@@ -17,7 +17,6 @@ import { BaseApiUrl } from "src/app/general";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-
 @Component({
   selector: "app-printers",
   templateUrl: "./printers.component.html",

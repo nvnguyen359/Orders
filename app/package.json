@@ -1,5 +1,5 @@
 {
-  "name": "AD-Orders",
+  "name": "AD",
   "version": "1.0.6",
   "description": "My test electron app",
   "main": "main.js",
@@ -10,14 +10,13 @@
     "deploy": "electron-builder",
     "build": "electron-builder"
   },
-  "repository": "https://github.com/nvnguyen359/Orders",
+  "repository": "https://github.com/nvnguyen359/ban-hang",
   "publish": {
     "provider": "github",
     "releaseType": "release"
   },
   "build": {
     "appId": "com.nguyen.autoupdater",
-    "productName": "Orders",
     "artifactName": "${name}-${version}.${ext}",
     "win": {
       "target": "nsis"
@@ -25,11 +24,11 @@
     "directories": {
       "output": "dist"
     },
-    "asar": true,
+    "asar": false,
     "extraFiles": [
       {
         "from": "./.env",
-        "to": "."
+        "to":"./.env"
       }
     ]
   },

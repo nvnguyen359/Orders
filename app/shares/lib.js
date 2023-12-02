@@ -9,6 +9,12 @@ Date.prototype.addDays = function (d = 0) {
   this.setTime(this.getTime() + 24 * 60 * 60 * 1000 * d);
   return this;
 };
+Date.prototype.startDay =function(){
+  return new Date(this.setHours(0, 0, 0, 0));
+};
+Date.prototype.endDay =function(){
+  return new Date(this.setHours(23, 59, 59, 999));
+};
 String.prototype.removeAccents = function () {
   return this.normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")

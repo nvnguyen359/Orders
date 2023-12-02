@@ -31,8 +31,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DialogConfirmComponent } from './Components/dialog-confirm/dialog-confirm.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { PrintersComponent } from "./Components/printers/printers.component";
-import { ExpansionTableComponent } from './Components/expansion-table/expansion-table.component';
-import { DynamicUpsertComponent } from './Components/dynamic-upsert/dynamic-upsert.component';
+import { NgApexchartsModule } from "ng-apexcharts";
 
 @NgModule({
   declarations: [AppComponent, SpinnerComponent, MenuLeftComponent, DialogConfirmComponent],
@@ -76,13 +75,13 @@ import { DynamicUpsertComponent } from './Components/dynamic-upsert/dynamic-upse
     MatNativeDateModule,
     MatTabsModule,
     NgFor,
-    MatButtonModule,
     NgIf,
     MatIconModule,
     MatCheckboxModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatDialogModule,PrintersComponent
+    MatDialogModule,PrintersComponent,
+    NgApexchartsModule
   ],
   providers: [MatDatepickerModule, {
     provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true

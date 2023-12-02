@@ -19,40 +19,40 @@ export class CustomersComponent {
     url: BaseApiUrl.KhachHangs,
     displayedColumns: ["no", ...this.columns],
   };
-  fieldFilter:any;
+  fieldFilter: any;
   constructor(private dialog: MatDialog, private dataService: DataService) {}
-  ngOnInit(){
-this.fieldFilter=(fields() as Fields[])
-.filter((x: Fields) =>
-  this.columns.concat(this.columnDate).includes(x.field)
-)
+  ngOnInit() {
+    this.fieldFilter = (fields() as Fields[]).filter((x: Fields) =>
+      this.columns.concat(this.columnDate).includes(x.field)
+    );
   }
   onUpsert(value: any) {
-    const fieldFilter = 
-    this.fieldFilter.map((x: Fields) => {
-        if (x.field == "createdAt") {
-          x.type = "hidden";
-        }
-        if (x.field == "updatedAt") {
-          x.type = "hidden";
-        }
-        return x;
-      });
+    const fieldFilter = this.fieldFilter.map((x: Fields) => {
+      if (x.field == "createdAt") {
+        x.type = "hidden";
+      }
+      if (x.field == "updatedAt") {
+        x.type = "hidden";
+      }
+      return x;
+    });
     this.dialog.open(DynamicUpsertComponent, {
       data: { value, fields: fieldFilter },
     });
   }
   onCreate() {
-    const obj={
-      id:"",
-      name: ['',Validators.required],
-      phone:['',Validators.required],
-      address:[''],
-      email:''
-    }
-    this.fieldFilter=(fields() as Fields[]).filter((x:any)=>this.columns.includes(x.field))
+    const obj = {
+      id: "",
+      name: ["", Validators.required],
+      phone: ["", Validators.required],
+      address: [""],
+      email: "",
+    };
+    this.fieldFilter = (fields() as Fields[]).filter((x: any) =>
+      this.columns.includes(x.field)
+    );
     this.dialog.open(DynamicUpsertComponent, {
-      data: { value:[], fields:this.fieldFilter ,obj },
+      data: { value: [], fields: this.fieldFilter, obj },
     });
   }
 }

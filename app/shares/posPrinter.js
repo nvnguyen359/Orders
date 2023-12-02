@@ -10,7 +10,6 @@ function posPrintThermal(order) {
     timeOutPerLine: 1000,
     pageSize: order?.pageSize || "80mm", // page size
   };
-  console.log(order)
   const qrCode={
     type: "image",
     url: urlImg, // file path

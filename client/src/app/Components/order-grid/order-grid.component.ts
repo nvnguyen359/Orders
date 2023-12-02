@@ -47,7 +47,7 @@ export class OrderGridComponent {
   onShowUpdate() {
     const order = this.inputData?.order;
     const details = order?.details;
-    // console.log(details)
+
     if (!details) {
       this.orders = [];
       return;
@@ -55,6 +55,7 @@ export class OrderGridComponent {
     // console.log('details',details.map((x:any)=>x.productId))
     // console.log(this.categories.map((x:any)=>x.id))
     details.forEach((item: any) => {
+      console.log(item)
       this.categories = this.categories.map((x: any) => {
         if (parseInt(x.id) == parseInt(item.productId)) {
           x.quantity = item.quantity;
@@ -64,6 +65,7 @@ export class OrderGridComponent {
         return x;
       });
     });
+   
     //this.categories =Array.from(this.categories).sort((a:any,b:any)=>b.quantity-a.quantity)
     // console.log(this.categories.map((x: any) => x.quantity));
   }

@@ -1,16 +1,23 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Order } from 'src/app/Models/order';
-import { OrderDetails } from 'src/app/Models/orderDetails';
-import { firstLastDate, BaseApiUrl, firstlastMonth, getQuarter, getStartEndMonthInQuarter, getStarEndDateInQuarter } from 'src/app/general';
-import { ApiService } from 'src/app/services/api.service';
-import { DataService } from 'src/app/services/data.service';
-import { Details } from 'src/app/services/print-html.service';
+import { Component } from "@angular/core";
+import { FormGroup, FormControl } from "@angular/forms";
+import { Order } from "src/app/Models/order";
+import { OrderDetails } from "src/app/Models/orderDetails";
+import {
+  firstLastDate,
+  BaseApiUrl,
+  firstlastMonth,
+  getQuarter,
+  getStartEndMonthInQuarter,
+  getStarEndDateInQuarter,
+} from "src/app/general";
+import { ApiService } from "src/app/services/api.service";
+import { DataService } from "src/app/services/data.service";
+import { Details } from "src/app/services/print-html.service";
 
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  selector: "app-reports",
+  templateUrl: "./reports.component.html",
+  styleUrls: ["./reports.component.scss"],
 })
 export class ReportsComponent {
   firstDay: Date = new Date();
@@ -37,13 +44,12 @@ export class ReportsComponent {
     end: new FormControl<Date | null>(null),
   });
 
-  title = `Ngày ${new Date().toLocaleDateString('vi')}`;
+  title = `Ngày ${new Date().toLocaleDateString("vi")}`;
   constructor(private service: ApiService, private dataService: DataService) {
-    // console.log(new Date().firstLastYear());
     const date = firstLastDate();
     this.firstDay = date.firstDate;
     this.lastDay = date.lastDate;
-    this.title = `Ngày ${new Date().toLocaleDateString('vi')}`;
+    this.title = `Ngày ${new Date().toLocaleDateString("vi")}`;
   }
   async ngOnInit() {
     this.getMonths();
@@ -69,12 +75,18 @@ export class ReportsComponent {
     }
   }
   //#endregion
-  getAll() {
-  }
-  getDonhangs() {
-    this.service.get(BaseApiUrl.Orders).then((e: any) => {
-      this.donhangs = e;
-      console.log(e)
+  getAll() {}
+  getDonhangs(obj: any = null) {
+    if (!obj)
+      obj = {
+        pageSize: 10000,
+        page: 0,
+        startDay: new Date(),
+        endDay: new Date(),
+      };
+    this.service.get(BaseApiUrl.Orders, obj).then((e: any) => {
+      this.donhangs = e.items;
+      //console.log(this.donhangs)
       this.filterOrders();
     });
   }
@@ -85,7 +97,7 @@ export class ReportsComponent {
     if (!event) {
       this.firstDay = today.firstDate;
       this.lastDay = today.lastDate;
-      this.title = `Ngày ${this.firstDay.toLocaleDateString('vi')}`;
+      this.title = `Ngày ${this.firstDay.toLocaleDateString("vi")}`;
     }
     if (`${event}`.includes("Tháng")) {
       const m = parseInt(`${event}`.replace("Tháng", "").trim());
@@ -98,7 +110,7 @@ export class ReportsComponent {
     }
     if (`${event}`.includes("thangnay")) {
       const m = new Date().getMonth();
-      const mount = firstlastMonth(y, m );
+      const mount = firstlastMonth(y, m);
       this.firstDay = mount.firstDay;
       this.lastDay = mount.lastDay;
       this.title = `Tháng ${
@@ -108,7 +120,6 @@ export class ReportsComponent {
     if (`${event}`.includes("quinay")) {
       const m = getQuarter(new Date());
       const quarter = getStartEndMonthInQuarter();
-      console.log(quarter)
       this.firstDay = quarter.firsDate;
       this.lastDay = quarter.lastDate;
       this.title = `Quí ${m}/${this.firstDay.getFullYear()}`;
@@ -125,51 +136,40 @@ export class ReportsComponent {
       this.lastDay = new Date(y, 11, 31, 23, 59, 59, 999);
       this.title = `Năm ${this.lastDay.getFullYear()}`;
     }
+    const obj = {
+      pageSize: 10000,
+      page: 0,
+      startDay: this.firstDay,
+      endDay: this.lastDay,
+    };
+
+    this.getDonhangs(obj);
     this.filterOrders();
   }
   filterOrders() {
     if (!this.donhangs) return;
     this.overviews = [];
-    this.filterOrder = Array.from(this.donhangs as Order[]) 
-      .filter((x: Order) => {
-        const date = new Date(x.createdAt);
-        return (
-          date >= this.firstDay &&
-          date <= this.lastDay &&
-          x.status != "Đã Hủy"
-        );
-      })
-      .map((x: Order) => {
-        // x.discount = parseInt(x.discount);
-        // x["Số Lượng"] = parseInt(x["Số Lượng"]);
-        // x["Thanh Toán"] = parseInt(x["Thanh Toán"]);
-        // x["Thành Tiền"] = parseInt(x["Thành Tiền"]);
-        // const chitiets = (x["chitiets"] as OrderDetails[]).map((x: any) => {
-        //   x["Ngày"] = new Date(x["Ngày"]);
-        //   x["Đơn giá"] = parseInt(x["Đơn giá"]);
-        //   x["Giá Nhập"] = parseInt(x["Giá Nhập"]);
-        //   x["Số Lượng"] = parseInt(x["Số Lượng"]);
-        //   return x;
-        // });
-        // x["chitiets"] = chitiets;
-        return x;
-      });
-
+    this.filterOrder = Array.from(this.donhangs as any).filter((x: any) => {
+      return x.status != "Đã Hủy";
+    });
+    this.dataService.sendMessage({ filterOrder: this.filterOrder });
     const tongDon = Array.from(this.filterOrder).length;
     const tongDoanhThu = Array.from(this.filterOrder)
-      .map((x: any) => parseInt(x["Thanh Toán"]))
+      .map((x: any) => parseInt(x["pay"])||0)
+      .reduce((a: number, b: number) => a + b, 0);
+    const tiencong = Array.from(this.filterOrder)
+      .map((x: any) => parseInt(x["wage"])||0)
       .reduce((a: number, b: number) => a + b, 0);
     const tongChietKhau = Array.from(this.filterOrder)
-      .map((x: any) => parseInt(x["Chiết Khấu"]))
+      .map((x: any) => (x["discount"] ? parseInt(x["discount"]) : 0))
       .reduce((a: number, b: number) => a + b, 0);
     this.overviews.push({ title: "Đơn Hàng", sum: tongDon });
     this.overviews.push({ title: "Doanh Thu", sum: tongDoanhThu });
     this.overviews.push({ title: "Chiết Khấu", sum: tongChietKhau });
-    this.chitiets = this.filterOrder.map((x: any) => x["chitiets"]).flat();
-    this.filterChiTiets = Array.from(this.chitiets).filter((x: any) => {
-      const date = false ? `${x["Ngày"]}`.DateVNToISO() : x["Ngày"];
-      return date >= this.firstDay && date <= this.lastDay;
-    });
+    this.chitiets = this.filterOrder.map((x: any) => x["details"]).flat();
+
+    this.filterChiTiets = Array.from(this.chitiets);
+    //console.log(this.filterOrder.map((x:any)=>x.createdAt))
     this.dataService.sendMessage({
       donhangs: this.filterOrder,
       title: this.title,
@@ -180,24 +180,31 @@ export class ReportsComponent {
       title: this.title,
     });
     const ttChiTiet = Array.from(this.filterChiTiets)
-      .map((x: any) => parseInt(x["Số Lượng"]) * parseInt(x["Giá Nhập"]))
+      .map((x: any) => parseInt(x.quantity)||0 * parseInt(x.importPrice)||0)
       .reduce((a: number, b: number) => a + b, 0);
-    console.log(ttChiTiet);
     this.overviews.push({
       title: "Lợi Nhuận",
-      sum: tongDoanhThu - tongChietKhau - ttChiTiet,
+      sum: tongDoanhThu - tongChietKhau - ttChiTiet + tiencong,
     });
   }
   onRangeDate(start: any, event: any) {
     if (start == "start") {
-      this.firstDay = event.target.value;
+      this.firstDay = new Date(event.target.value);
     }
     if (start != "start") {
-      this.lastDay = event.target.value;
+      this.lastDay = new Date(event.target.value);
     }
     this.title = `Từ ${this.firstDay.toLocaleDateString(
-      
-    )} Đến ${this.lastDay.toLocaleDateString()}`;
+      "vi"
+    )} Đến ${this.lastDay.toLocaleDateString("vi")}`;
+    const obj = {
+      pageSize: 10000,
+      page: 0,
+      startDay: this.firstDay,
+      endDay: this.lastDay,
+    };
+
+    this.getDonhangs(obj);
     this.filterOrders();
   }
 }

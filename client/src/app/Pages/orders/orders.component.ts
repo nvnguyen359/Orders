@@ -18,6 +18,8 @@ import { DataService } from "src/app/services/data.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { PrintHtmlService } from "src/app/services/print-html.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ActivatedRoute } from "@angular/router";
+import { async } from "rxjs";
 @Component({
   selector: "app-orders",
   templateUrl: "./orders.component.html",
@@ -67,18 +69,20 @@ export class OrdersComponent {
   columnsToDisplayWithExpand = [...this.columnsToDisplay, "expand"];
   expandedElement: any | null;
   details: any = [];
+  getCustomer: any;
   constructor(
     private dialog: MatDialog,
     private service: ApiService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dataService: DataService,
     private printHtmt: PrintHtmlService,
-    private snckbar:MatSnackBar
+    private snckbar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {}
   async ngOnInit() {
     this.getOrders();
     await this.getCustomers();
-    this.getProduct();
+    await this.getProduct();
   }
   ngAfterViewInit() {
     this.dataService.currentMessage.subscribe(async (data: any) => {
@@ -95,9 +99,16 @@ export class OrdersComponent {
         await this.startPrinter(order);
       }
     });
+    this.activatedRoute.params.subscribe(async (obj: any) => {
+      if (!obj.name) return;
+      await this.getCustomers();
+      await this.getProduct();
+      const ob = { name: obj.name, customerId: obj.id, status: "Đặt Hàng" };
+      await this.onCreate(ob);
+    });
   }
   openDialog(obj: any = null) {
-    // console.log(obj)
+    console.log(obj)
     return new Promise((res: any, rej) => {
       this.products = this.products.map((x: any) => {
         x.quantity = 0;
@@ -145,10 +156,13 @@ export class OrdersComponent {
       })) as any
     ).items;
   }
-  getProduct() {
-    this.service
-      .get(BaseApiUrl.SanpPhams, { page: 0, pageSize: 10000 })
-      .then((e: any) => (this.products = e.items));
+  async getProduct() {
+    this.products = (
+      (await this.service.get(BaseApiUrl.SanpPhams, {
+        page: 0,
+        pageSize: 10000,
+      })) as any
+    ).items;
   }
   public getServerData(event?: PageEvent) {
     this.pageEvent = event;
@@ -174,6 +188,7 @@ export class OrdersComponent {
   }
   async updateOrCreateDetails(orderDetailsAfterUpdate: any[], orderId: any) {
     const ids = this.details.map((x: any) => parseInt(x.id)) as any[];
+    console.log(ids)
     const url = BaseApiUrl.ChiTietDonHangs;
     const oldDetails = orderDetailsAfterUpdate.filter((x: any) =>
       ids.includes(x.id)
@@ -191,8 +206,8 @@ export class OrdersComponent {
     }
     if (newDetails.length > 0) await this.service.create(url, newDetails);
   }
-  async onCreate() {
-    const { order, details } = (await this.openDialog()) as any;
+  async onCreate(obj: any = null) {
+    const { order, details } = (await this.openDialog(obj)) as any;
     const orderId = (await this.service.create(BaseApiUrl.Order, order)) as any;
     await delay(200);
     let details1 = details.map((x: any) => {
@@ -237,16 +252,19 @@ export class OrdersComponent {
       order.pageSize = local.page.pageSize;
       order.rawHtml = rawHtml;
       order.isPreview = local.isPreview;
-      this.service.postPrinters(order).then((result:any)=>{
-        if(result.error){
-         // console.log(result.error,result.text)
-          this.service.translate(result.text).then((data:any)=>{
-            this.snckbar.open(data,'',{duration:13000})
-          })
-        }
-      }).catch((error:any)=>{
-        console.log(error)
-      });
+      this.service
+        .postPrinters(order)
+        .then((result: any) => {
+          if (result.error) {
+            // console.log(result.error,result.text)
+            this.service.translate(result.text).then((data: any) => {
+              this.snckbar.open(data, "", { duration: 13000 });
+            });
+          }
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
     } else {
       this.printHtmt.printBill();
     }

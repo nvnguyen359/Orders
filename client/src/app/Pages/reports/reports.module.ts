@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 
 import { ReportsRoutingModule } from './reports-routing.module';
@@ -21,11 +21,15 @@ import {MatMenuModule} from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { NumberRoundPipe } from 'src/app/Pipes/number-round.pipe';
+import { DonutProductComponent } from 'src/app/Components/donut-product/donut-product.component';
+import { ChartOrderComponent } from 'src/app/Components/chart-order/chart-order.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { StackedColumnsComponent } from 'src/app/Charts/stacked-columns/stacked-columns.component';
 
 @NgModule({
   declarations: [
     ReportsComponent,
-    NumberRoundPipe
+    NumberRoundPipe,ChartOrderComponent,DonutProductComponent,StackedColumnsComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +57,7 @@ import { NumberRoundPipe } from 'src/app/Pipes/number-round.pipe';
     MatNativeDateModule,
     ReactiveFormsModule,
     MatCardModule,
-
-  ]
+    NgApexchartsModule
+  ],schemas:[NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ReportsModule { }

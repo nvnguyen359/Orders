@@ -5,6 +5,14 @@ export enum Status {
   isDonhang,
   resultDelete = "resultDelete",
 }
+export enum groupItem {
+  IsumImport = "sumImport",
+  ISumSales = "sumSales",
+  ISumQuantity = "sumQuantity",
+  ISumExpense = "sumExpense",
+  sumImport = "sumImport",
+  sumSale = "sumSale",
+}
 
 export enum BaseApiUrl {
   NhapHangs = "importGoods",
@@ -20,6 +28,11 @@ export enum BaseApiUrl {
   Order = "order",
   listOrders = "listOrders",
   Printers = "printers",
+}
+export enum fieldData {
+  importPrice = "importPrice",
+  price = "price",
+  intoMoney='intoMoney'
 }
 export function links() {
   return [
@@ -65,60 +78,109 @@ export function links() {
     },
   ];
 }
+
 export function fields() {
   const data = [
     {
       field: "name",
       type: "text",
-      text:'Tên',
-      require:true
+      text: "Tên",
+      require: true,
+    },
+    {
+      field: "quantity",
+      type: "number",
+      text: "Số Lượng",
+      step: 1,
+      require: true,
     },
     {
       field: "phone",
       type: "phone",
-      text:'Điện Thoại',
-      require:true
+      text: "Điện Thoại",
+      require: true,
     },
     {
       field: "address",
       type: "text",
-      text:'Địa Chỉ',
-      require:false
+      text: "Địa Chỉ",
+      require: false,
     },
     {
       field: "email",
       type: "email",
-      text:'Email',
+      text: "Email",
+      require: false,
     },
     {
       field: "createdAt",
       type: "date",
-      text:'Ngày Tạo'
+      text: "Ngày Tạo",
     },
     {
       field: "updatedAt",
       type: "date",
-      text:'Ngày Cập Nhật'
+      text: "Ngày Cập Nhật",
     },
     {
       field: "price",
       type: "number",
-      text:'Đơn Giá',
-      step:500, require:true
+      text: "Đơn Giá",
+      step: 500,
+      require: true,
     },
     {
       field: "importPrice",
       type: "number",
-      text:'Giá Nhập',
-      step:500, require:true
-    },{
+      text: "Giá Nhập",
+      step: 500,
+      require: true,
+    },
+    {
       field: "pay",
       type: "number",
-      text:'Thanh Toán'
-    },{
+      text: "Thanh Toán",
+    },
+    {
       field: "unit",
       type: "text",
-      text:'Đơn Vị'
+      text: "Đơn Vị",
+    },
+    {
+      field: "money",
+      type: "number",
+      text: "Số Tiền",
+      require: true,
+    },
+    {
+      field: "note",
+      type: "text",
+      text: "Ghi Chú",
+      step: 500,
+      require: true,
+    },
+    {
+      field: groupItem.IsumImport,
+      text: "Tổng Nhập",
+    },
+    {
+      field: groupItem.ISumSales,
+      text: "Tổng Doanh Thu",
+    },
+    {
+      field: groupItem.ISumQuantity,
+      text: "Tổng Số Lượng",
+    },
+    {
+      field: groupItem.ISumExpense,
+      text: "Tổng Chi",
+    },
+    {
+      field: groupItem.sumSale,
+      text: "Tổng Bán",
+    }, {
+      field: groupItem.sumImport,
+      text: "Tiền Nhập",
     },
   ];
   return data;

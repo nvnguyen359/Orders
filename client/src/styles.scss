@@ -26,9 +26,10 @@ body {
 }
 
 
-.text-center{
+.text-center {
     text-align: center;
 }
+
 .text-align {
     text-align: right;
 }
@@ -59,13 +60,16 @@ a {
     overflow: hidden;
     padding: 16px;
 }
-.full-width{
+
+.full-width {
     width: 100%;
 }
+
 .active {
     background-color: var(--mat-stepper-header-selected-state-icon-background-color) !important;
-    color: whitesmoke!important;
+    color: whitesmoke !important;
 }
+
 .name {
     display: flex;
     cursor: pointer;
@@ -91,11 +95,13 @@ a {
     opacity: 0.75;
     display: flex;
 }
+
 @keyframes rotating {
-    from{
+    from {
         -webkit-transform: rotate(0deg);
     }
-    to{
+
+    to {
         -webkit-transform: rotate(360deg);
     }
 }
@@ -103,22 +109,31 @@ a {
 .rotating {
     -webkit-animation: rotating 2s linear infinite;
 }
+
 @keyframes example {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
-  }
-.refesh{
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.refesh {
     animation: rotating 2s linear infinite;
     width: 24px;
     height: 24px;
-   
+
     align-items: center;
     cursor: pointer;
     display: none;
 }
-.refesh.show{
+
+.refesh.show {
     display: flex;
 }
+
 .delete {
     color: var(--mat-stepper-header-error-state-label-text-color);
     cursor: pointer;
@@ -131,32 +146,41 @@ a {
     color: #3f51b5;
 
 }
-.flex.center{
+
+.flex.center {
     display: flex;
     align-items: center;
 }
-.iconAction{
+
+.iconAction {
     cursor: pointer;
 }
-.text-left{
+
+.text-left {
     text-align: left;
 }
-.text-right{
+
+.text-right {
     text-align: right;
 }
-button{
+
+button {
     transition: 0.4s all;
 }
+
 .disabled {
     transition: 0.4s all;
     cursor: not-allowed;
     pointer-events: none;
 
     /*Button disabled - CSS color class*/
-    color: #ffffff!important;
-    background-color: #d6d4d4!important;
-  }
-  .max-height{
+    color: #ffffff !important;
+    background-color: #d6d4d4 !important;
+}
+
+.max-height {
+    min-height: 200px;
     max-height: 520px;
     overflow: auto;
-  }
+    height: 100%;
+}

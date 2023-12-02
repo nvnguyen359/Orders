@@ -22,10 +22,12 @@ const routes: Routes = [
       ),
   },
   { path: BaseApiUrl.SanpPhams, loadChildren: () => import('./Pages/products/products.module').then(m => m.ProductsModule) },
+  { path: BaseApiUrl.ChiPhis, loadChildren: () => import('./Pages/expense/expense.module').then(m => m.ExpenseModule) },
+  { path: 'importGoods', loadChildren: () => import('./Pages/import-goods/import-goods.module').then(m => m.ImportGoodsModule) },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,{onSameUrlNavigation:'reload'})],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

@@ -75,25 +75,36 @@ class CRUDKNEX {
     // console.log("id ", id, this.table, result);
     return result;
   }
-  async findAll(query = "", column = null, limit, offset = 0) {
+  async findAll(
+    query = "",
+    column = null,
+    limit,
+    offset = 0,
+    startDay,
+    endDay
+  ) {
+    if (!column) column = "*";
     return new Promise(async (res, rej) => {
+     // console.log(new Date(startDay).toISOString(),new Date(endDay).toLocaleDateString('vi'))
       const orderBy = "id";
+      let qr = !startDay
+        ? await this.knex
+            .columns(column)
+            .select()
+            .limit(limit)
+            .offset(offset)
+            .from(this.table)
+            .orderBy(orderBy, "desc")
+        : await this.knex(this.table)
+            .whereBetween("createdAt", [new Date(startDay).toISOString(), new Date(endDay).toISOString()])
+            .columns(column)
+            .select()
+            .limit(limit)
+            .offset(offset)
+            .orderBy(orderBy, "desc");
       const result =
         query == ""
-          ? column
-            ? await this.knex
-                .columns(column)
-                .select()
-                .limit(limit)
-                .offset(offset)
-                .from(this.table)
-                .orderBy(orderBy, "desc")
-            : await this.knex
-                .select("*")
-                .limit(limit)
-                .offset(offset)
-                .from(this.table)
-                .orderBy(orderBy, "desc")
+          ? qr
           : !offset
           ? await this.knex
               .raw(query + ` limit ${limit} offset ${offset}`)

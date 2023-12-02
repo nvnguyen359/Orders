@@ -121,14 +121,9 @@ class CRUD {
       const rows = Array.from(await sheet.getRows());
       //const keys = Object.keys(values[0]);
       const count = rows.length;
-
+      // console.log(values);
       const newRows = values.map((x, index) => {
-        //  const id = uid();
-
-        if (x["Id"] == "" || x["Id"] == null) {
-          x["Id"] = count + index;
-        }
-        if (x["id"] == "") {
+        if (x["id"] == "" || x["id"] == null) {
           x["id"] = count + index;
         }
         return x;
@@ -146,7 +141,7 @@ class CRUD {
       const sheet = this.doc.sheetsByTitle[this.nameSheet];
       const array = await sheet.getRows();
       const keys = Object.keys(values[0]);
-      const keyId = "Id" || "id";
+      const keyId = "id";
 
       return new Promise(async (res, rej) => {
         array.forEach(async (row) => {
@@ -179,9 +174,9 @@ class CRUD {
     });
 
     if (row) {
-      console.log("Delete ", id);
+     // console.log("Delete ", id);
       row.delete();
-      return { mes: "success", data: await this.getAll() };
+      return { mes: "success"  };
     } else {
       return { mes: `${id} does not exist` };
     }

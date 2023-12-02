@@ -38,11 +38,23 @@ import { FormatValuePipe } from "src/app/Pipes/format-value.pipe";
 import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 import { InforCustomerInOrderComponent } from "../infor-customer-in-order/infor-customer-in-order.component";
 import { StatusComponent } from "../status/status.component";
-import { BaseApiUrl, Status } from "src/app/general";
+import { BaseApiUrl, Status, fieldData, groupItem } from "src/app/general";
 import { ApiService } from "src/app/services/api.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DataService } from "src/app/services/data.service";
 import { Router } from "@angular/router";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatDialog } from "@angular/material/dialog";
+import { DynamicUpsertComponent } from "../dynamic-upsert/dynamic-upsert.component";
+import { OrderUpsertComponent } from "src/app/Pages/orders/order-upsert/order-upsert.component";
+import { GroupItems } from "./groupItems";
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from "@angular/animations";
 
 @Component({
   selector: "app-expansion-table",
@@ -50,6 +62,16 @@ import { Router } from "@angular/router";
   // declarations:[FormatValuePipe,ColumnOrdersPipe],
   templateUrl: "./expansion-table.component.html",
   styleUrls: ["./expansion-table.component.scss"],
+  animations: [
+    trigger("detailExpand", [
+      state("collapsed,void", style({ height: "0px", minHeight: "0" })),
+      state("expanded", style({ height: "*" })),
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      ),
+    ]),
+  ],
   imports: [
     CommonModule,
     MatTableModule,
@@ -73,6 +95,7 @@ import { Router } from "@angular/router";
     InforCustomerInOrderComponent,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatTooltipModule,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -93,6 +116,8 @@ export class ExpansionTableComponent {
     "unit",
     "createdAt",
   ];
+  columnsChild: any[] = [];
+  columnsToDisplayWithExpand:any[] = [...this.displayedColumns, "expand"];
   selection = new SelectionModel<any>(true, []);
   array: any;
   dataSource = new MatTableDataSource();
@@ -101,14 +126,21 @@ export class ExpansionTableComponent {
   pageEvent?: PageEvent;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-
+  fieldFilter: any;
   disabled = "disabled";
+  customers: any = [];
+  products: any = [];
+  expandedElement: any | null;
+  details: any[] = [];
   constructor(
     private service: ApiService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dataService: DataService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private dialog: MatDialog
+  ) {
+    this.columnsToDisplayWithExpand = [...this.displayedColumns, "expand"];
+  }
   ngOnInit() {
     if (this.options.displayedColumns) {
       this.displayedColumns = this.options.displayedColumns;
@@ -121,6 +153,9 @@ export class ExpansionTableComponent {
     });
   }
   ngAfterViewInit() {}
+  ngDisabled() {
+    return this.selection.selected.length < 1 ? "disabled" : "";
+  }
   getData() {
     this.selection.clear();
     const pageIndex = this.pageEvent?.pageIndex || 0;
@@ -131,7 +166,28 @@ export class ExpansionTableComponent {
     this.service
       .get(this.options.url, { page: pageIndex, pageSize })
       .then((data: any) => {
-        const items = Array.from(data.items).map((x: any, index: any) => {
+        this.details = data.items;
+        if (this.options.multi) {
+          const groupItems = new GroupItems(data.items);
+          const x = groupItems.groupItems;
+          this.displayedColumns = x?.columns;
+          this.options.displayedColumns.pop();
+  
+          if (this.router.url.includes(BaseApiUrl.NhapHangs)) {
+            this.columnsChild = [...this.options.displayedColumns,groupItem.sumImport,groupItem.sumSale];
+          }else{
+            this.columnsChild = [...this.options.displayedColumns];
+        
+          }
+          this.columnsToDisplayWithExpand = [
+           ...this.displayedColumns,
+            "expand",
+          ];
+          console.log(this.columnsToDisplayWithExpand)
+          this.details = x.items;
+        }
+
+        const items = Array.from(this.details).map((x: any, index: any) => {
           x.no = index + 1 + pageIndex * pageSize;
           return x;
         });
@@ -139,6 +195,9 @@ export class ExpansionTableComponent {
         this.dataSource.data = items;
         this.changeDetectorRefs.detectChanges();
       });
+  }
+  showImport() {
+    return this.options?.multi;
   }
   getServerData(event: PageEvent) {
     this.pageEvent = event;
@@ -174,18 +233,31 @@ export class ExpansionTableComponent {
   async onbulkDelete() {
     if (this.selection.selected.length < 1) return;
     const ids = (this.selection.selected as any[]).map((x: any) => x.id);
-    const result = await this.service.bulkDelete(this.options.url, ids);
+    const result = await this.service.bulkDelete(this.options.url, ids, true);
     if (result) {
       this.getData();
     }
   }
   onUpdates() {
     if (this.selection.selected.length < 1) return;
-    const value = this.selection.selected.map((x: any) => {
+    let result: any;
+    if (this.options.multi) {
+      result = Array.from(this.selection.selected as any[])
+        .map((x: any) => {
+          return x.details;
+        })
+        .flat();
+    } else {
+      result = this.selection.selected;
+    }
+    let result1 = result.map((x: any) => {
       delete x.no;
+      delete x[groupItem.sumImport];
+      delete x[groupItem.sumSale];
       return x;
     });
-    this.eventUpsert.emit(value);
+    // console.log(result1);
+    this.eventUpsert.emit(result1);
   }
   onCreate() {}
   //******************************************** */
@@ -208,6 +280,14 @@ export class ExpansionTableComponent {
       { key: "address", value: "Địa Chỉ" },
       { key: "phone", value: "Phone" },
       { key: "email", value: "Email" },
+      { key: "note", value: "Ghi Chú" },
+      { key: "money", value: "Tiền" },
+      { key: groupItem.ISumQuantity, value: "Số Lượng" },
+      { key: groupItem.ISumSales, value: "Tổng Doanh Thu" },
+      { key: groupItem.IsumImport, value: "Tổng Nhập" },
+      { key: groupItem.ISumExpense, value: "Tổng Chi" },
+      { key: groupItem.sumSale, value: "Doanh Thu" },
+      { key: groupItem.sumImport, value: "Tiền Nhập" },
     ];
     const name = columnsToDisplay.find((x: any) => x.key == key)?.value;
     return name;
@@ -238,5 +318,9 @@ export class ExpansionTableComponent {
     return `${value}`.includes("price") || `${value}`.includes("Price")
       ? "text-right"
       : "text-left";
+  }
+
+  async onAddNewOrder(ob: any) {
+    this.router.navigate([`${BaseApiUrl.Orders}`, ob]);
   }
 }

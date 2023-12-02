@@ -142,6 +142,8 @@ interface Date {
   firstLastDate(): any;
   firstlastMonth(y: number, m: number): any;
   firstLastYear(): any;
+  startDay(): Date;
+  endDay(): Date;
 }
 Date.prototype.addHours = function (h: any) {
   this.setTime(this.getTime() + h * 60 * 60 * 1000);
@@ -151,10 +153,14 @@ Date.prototype.addDays = function (d = 0) {
   this.setTime(this.getTime() + 24 * 60 * 60 * 1000 * d);
   return this;
 };
-
+Date.prototype.startDay = function () {
+  return new Date(this.setHours(0, 0, 0, 0));
+};
+Date.prototype.endDay = function () {
+  return new Date(this.setHours(23, 59, 59, 999));
+};
 Date.prototype.firstLastDate = () => {
-  const date = new Date();
-  const d = new Date(date);
+  const d = new Date();
   return {
     firstDate: new Date(d.setHours(0, 0, 0, 0)),
     lastDate: new Date(d.setHours(23, 59, 59, 999)),
