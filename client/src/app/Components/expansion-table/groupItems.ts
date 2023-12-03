@@ -20,7 +20,7 @@ export class GroupItems {
         items.map((x: any) => new Date(x.createdAt).toLocaleDateString("vi"))
       ),
     ];
-
+console.log(dates)
     const keys = Object.keys(items[0] as any);
     //console.log(keys,keys.includes("importPrice"))
     let columns: any[] = [];
@@ -34,7 +34,7 @@ export class GroupItems {
     if (keys.includes("money")){
       columns.push(groupItem.ISumExpense);
     }
-    console.log(columns)
+
     dates.forEach((date: any) => {
       const itemsX = items.filter(
         (a: any) => new Date(a.createdAt).toLocaleDateString("vi") == date
@@ -51,10 +51,10 @@ export class GroupItems {
           .map((x: any) => parseInt(x.price) * parseInt(x.quantity))
           .reduce((a: number, b: number) => a + b, 0)
           .toLocaleString("vi");
-          obj[fieldData.intoMoney] = itemsX
-          .map((x: any) => parseInt(x.importPrice) * parseInt(x.quantity))
-          .reduce((a: number, b: number) => a + b, 0)
-          .toLocaleString("vi");
+          // obj[fieldData.intoMoney] = itemsX
+          // .map((x: any) => parseInt(x.importPrice) * parseInt(x.quantity))
+          // .reduce((a: number, b: number) => a + b, 0)
+          // .toLocaleString("vi");
         obj[groupItem.ISumQuantity] =
           itemsX
             .map((x: any) => parseInt(x.quantity))
@@ -83,7 +83,7 @@ export class GroupItems {
       
       array.push(obj);
     });
-console.log(array)
+
     return { items: array, columns: [...new Set(columns)] };
   }
 }

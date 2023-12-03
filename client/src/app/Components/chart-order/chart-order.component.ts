@@ -137,16 +137,19 @@ export class ChartOrderComponent {
         this.columnsDoanhThu = [];
         this.columnsOrders = [];
         this.columnsLoiNhuan = [];
-        const donhangs = Array.from(result.donhangs);
+        const donhangs = Array.from(result.donhangs).map((x:any)=>{
+          x.createdAt=new Date(x.createdAt).toLocaleDateString('vi');
+          return x;
+        });
 
         if (donhangs.length < 1) {
           this.chartOptions.labels = [];
           this.ininitData[0].data = [];
         }
-        const dates = [...new Set(donhangs.map((x: any) => x.createdAt))];
+        const dates = [...new Set(donhangs.map((x:any)=>x.createdAt))];
         dates.forEach((date: any) => {
           const dhs = donhangs.filter(
-            (x: any) => x.createdAt == date
+            (x: any) => x.createdAt== date
           ) as Order[];
           this.columnsOrders.push(dhs.length);
           const dts = dhs
@@ -165,9 +168,10 @@ export class ChartOrderComponent {
           this.columnsLoiNhuan.push(sum);
         });
         this.labels = [...new Set(dates)].map((x: any) =>
-          new Date(x)
-            .toLocaleDateString("vi")
-            .replace(`/${new Date().getFullYear()}`, "")
+         {
+          const year = x.split('/')[2].toString().slice(0,2)
+          const t = x.replace(`${year}`, "");return t
+         }
         );
         this.chartOptions.labels = this.labels;
         this.ininitData[0].data = this.columnsOrders;

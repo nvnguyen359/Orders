@@ -1,5 +1,5 @@
 <h2 class="text-center">{{infor}}</h2>
-<form [formGroup]="form" (ngSubmit)="onSubmit()" >
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="max-height" id="scrollTop" style="    padding-top: 16px;">
         <ng-container *ngIf="data.obj">
             <div class="flex full-width" style="justify-content: flex-end;">
@@ -25,22 +25,35 @@
 
                     <mat-form-field appearance="outline" *ngFor="let item of fieldsShow" class="{{max50(item)}}">
                         <mat-label>{{item.text}}</mat-label>
-                        <input *ngIf="item.field!='unit'&& !onShowName(item)" matInput [placeholder]="item.text" [type]="item.type"
-                             [step]="item.step" [formControlName]="item.field"
-                            autocomplete="off" />
-                            
-                        <input *ngIf="item.field=='unit'" (keyup)="onKeyUpUnit($event)" matInput
-                            [placeholder]="item.text" [type]="item.type" [required]="item.required" [step]="item.step"
-                            [formControlName]="item.field" [matAutocomplete]="auto" />
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <mat-option *ngFor="let item of filteredOptionsUnit;" [value]="item">{{item}}</mat-option>
-                        </mat-autocomplete>
-                        <input *ngIf="onShowName(item) " (keyup)="onKeyUpName($event)" matInput
-                            [placeholder]="item.text" [type]="item.type" required="{{item.required}}" [step]="item.step"
-                            [formControlName]="item.field" [matAutocomplete]="auto1" />
-                        <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete" (optionSelected)="optionSelectedProductName($event,i)">
-                            <mat-option *ngFor="let item of filteredOptionsNames;" [value]="item.name">{{item.name}}</mat-option>
-                        </mat-autocomplete>
+                        <div [ngSwitch]="item.field">
+                            <div *ngSwitchCase="'unit'">
+                                <input (keyup)="onKeyUpUnit($event)" matInput [placeholder]="item.text"
+                                    [type]="item.type" [required]="item.required" [step]="item.step"
+                                    [formControlName]="item.field" [matAutocomplete]="auto" />
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                    <mat-option *ngFor="let item of filteredOptionsUnit;"
+                                        [value]="item">{{item}}</mat-option>
+                                </mat-autocomplete>
+                            </div>
+                            <div *ngSwitchCase="'name'">
+                                <input (keyup)="onKeyUpName($event)" matInput [placeholder]="item.text"
+                                    [type]="item.type" required="{{item.required}}" [step]="item.step"
+                                    [formControlName]="item.field" [matAutocomplete]="auto1" />
+                                <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete"
+                                    (optionSelected)="optionSelectedProductName($event,i)">
+                                    <mat-option *ngFor="let item of filteredOptionsNames;"
+                                        [value]="item.name">{{item.name}}</mat-option>
+                                </mat-autocomplete>
+                            </div>
+                            <div *ngSwitchDefault>
+                                <input matInput [placeholder]="item.text" [type]="item.type" [step]="item.step"
+                                    [formControlName]="item.field" autocomplete="off" />
+                            </div>
+                        </div>
+
+
+
+
                     </mat-form-field>
                     <mat-icon color="warn" class="delete" (click)="onDelete(i)">delete</mat-icon>
                 </div>

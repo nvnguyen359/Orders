@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgForOf, NgIf } from "@angular/common";
+import { AsyncPipe, CommonModule, NgFor, NgForOf, NgIf } from "@angular/common";
 import {
   Component,
   Inject,
@@ -54,6 +54,7 @@ declare var removeAccents: any;
     MatAutocompleteModule,
     AsyncPipe,
     NgForOf,
+    CommonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
@@ -273,7 +274,7 @@ export class DynamicUpsertComponent {
     }
     return result;
   }
-  onShowChiPhi(item:any) {
+  onShowChiPhi(item: any) {
     return this.url == BaseApiUrl.ChiPhis;
   }
 }

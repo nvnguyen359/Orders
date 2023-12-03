@@ -25,13 +25,11 @@ function jsRun() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const menus = document.querySelectorAll(".menu  a.menu-item");
-  const url = this.location.pathname;
-  console.log(url);
+  const url = this.location.pathname.split(';')[0];
   if (menus) {
-    if(url=='/')
-    menus[0].classList.add("active");
+    if (url == "/") menus[0].classList.add("active");
     menus.forEach((a) => {
-      if (a.getAttribute("href") == url) {
+      if (a.getAttribute("href").includes(url)) {
         a.classList.add("active");
       }
     });

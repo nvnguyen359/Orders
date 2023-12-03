@@ -1,4 +1,4 @@
-<div class="full-width" >
+<div class="full-width">
   <div class="flex" style="align-items: center; padding:8px">
     <button mat-stroked-button extended color="accent" [matMenuTriggerFor]="menu">
       Bộ Lọc
@@ -26,29 +26,7 @@
 </div>
 <mat-card>
   <div class="full-width flex" style="margin-top: -0px;">
-    <mat-tab-group style="width: 100%;">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon> bar_chart</mat-icon>
-          Đơn Hàng
-        </ng-template>
-       <ng-template matTabContent>
-        <app-chart-order *ngIf="filterOrder"></app-chart-order>
-       </ng-template>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon> show_chart</mat-icon>
-          Lợi Nhuận
-        </ng-template>
-        <ng-template matTabContent>
-         <div class="stacked-columns">
-          <app-stacked-columns></app-stacked-columns> 
-         </div>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+    <app-chart-order  style="width: 100%;"></app-chart-order>
   </div>
 </mat-card>
 <mat-menu #menu="matMenu">

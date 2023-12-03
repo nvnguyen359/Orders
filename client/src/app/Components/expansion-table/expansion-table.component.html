@@ -29,9 +29,9 @@
                             </mat-checkbox>
                         </ng-container>
                         <ng-container *ngIf="column!='no'" style="width: 50px;">
-                            <div class="{{textAligh(element[column])}}" style="width: 100%;">
+                            <div class=" full-width" style="width: 100%;">
                                 {{formatValue(element[column])}}</div>
-                            <button *ngIf="column=='email'" mat-mini-fab color="accent" matTooltip="Tạo Đơn Hàng Mới"
+                            <button *ngIf="column=='email'" mat-icon-button color="accent" matTooltip="Tạo Đơn Hàng Mới"
                                 (click)="onAddNewOrder(element)"><mat-icon>add</mat-icon></button>
                         </ng-container>
 
@@ -60,16 +60,6 @@
                             <table class="table-details">
                                 <thead>
                                     <td [class]="thTextAligh(column)" *ngFor="let column of columnsChild">
-                                        <!-- <ng-container *ngIf="column=='no'">
-                                            {{element[column]}}
-                                            <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                                                [checked]="selection.hasValue() && isAllSelected()"
-                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                            </mat-checkbox>
-                                        </ng-container>
-                                        <ng-container *ngIf="column!='no'">
-                                            {{columnOrders(column)}}
-                                        </ng-container> -->
                                         {{columnOrders(column)}}
                                     </td>
                                 </thead>

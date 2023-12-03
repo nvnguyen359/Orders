@@ -170,14 +170,12 @@ export class ReportsComponent {
 
     this.filterChiTiets = Array.from(this.chitiets);
     //console.log(this.filterOrder.map((x:any)=>x.createdAt))
-    this.dataService.sendMessage({
-      donhangs: this.filterOrder,
-      title: this.title,
-      chitiets: this.chitiets,
-    });
+
     this.dataService.sendMessage({
       donut: this.filterChiTiets,
       title: this.title,
+      donhangs: this.filterOrder,
+      chitiets: this.chitiets,
     });
     const ttChiTiet = Array.from(this.filterChiTiets)
       .map((x: any) => parseInt(x.quantity)||0 * parseInt(x.importPrice)||0)

@@ -108,16 +108,9 @@ export class ExpansionTableComponent {
   };
   @Output() eventDelete = new EventEmitter();
   @Output() eventUpsert = new EventEmitter();
-  displayedColumns: string[] = [
-    "no",
-    "name",
-    "importPrice",
-    "price",
-    "unit",
-    "createdAt",
-  ];
+  displayedColumns: string[] = [];
   columnsChild: any[] = [];
-  columnsToDisplayWithExpand:any[] = [...this.displayedColumns, "expand"];
+  columnsToDisplayWithExpand: any[] = [...this.displayedColumns, "expand"];
   selection = new SelectionModel<any>(true, []);
   array: any;
   dataSource = new MatTableDataSource();
@@ -172,18 +165,20 @@ export class ExpansionTableComponent {
           const x = groupItems.groupItems;
           this.displayedColumns = x?.columns;
           this.options.displayedColumns.pop();
-  
+
           if (this.router.url.includes(BaseApiUrl.NhapHangs)) {
-            this.columnsChild = [...this.options.displayedColumns,groupItem.sumImport,groupItem.sumSale];
-          }else{
+            this.columnsChild = [
+              ...this.options.displayedColumns,
+              groupItem.sumImport,
+              groupItem.sumSale,
+            ];
+          } else {
             this.columnsChild = [...this.options.displayedColumns];
-        
           }
           this.columnsToDisplayWithExpand = [
-           ...this.displayedColumns,
+            ...this.displayedColumns,
             "expand",
           ];
-          console.log(this.columnsToDisplayWithExpand)
           this.details = x.items;
         }
 
@@ -297,7 +292,8 @@ export class ExpansionTableComponent {
     if (this.isNumeric(value)) {
       return parseInt(value).toLocaleString("vi");
     } else {
-      if (new Date(value).toString() != "Invalid Date") {
+  
+      if (!value.includes('/')&& new Date(value).toString() != "Invalid Date") {
         return new Date(value).toLocaleDateString("vi");
       } else {
         return value;
